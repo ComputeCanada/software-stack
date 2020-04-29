@@ -1,4 +1,4 @@
-# software-stack
+# Compute Canada software stack
 This meta repository is meant to host issues related to the Compute Canada software stack that is available through our public CVMFS. 
 
 * [Documentation on using our software stack on your computer](https://docs.computecanada.ca/wiki/Accessing_CVMFS)
