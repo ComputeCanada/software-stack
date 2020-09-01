@@ -303,7 +303,7 @@ sudo -i -u ebuser RSNT_ARCH=sse3 eb <name of easyconfig file>
 The `StdEnv/2016.4` and `StdEnv/2018.3` are built on top of Nix while the `StdEnv/2020` is built on top of Gentoo.
 In order for EasyBuild to choose the correct toolchains and underlying Nix or Gentoo, a suitable StdEnv needs
 to be loaded before invoking `eb`.  
-As of September 2020, ob build-node the `StdEnv/2016.4` is still the default and good to compile software for 
+As of September 2020, on build-node the `StdEnv/2016.4` is still the default and good to compile software for 
 both `StdEnv/2016.4` and `StdEnv/2018.3`.
 
 So for building software for `StdEnv/2020`, the new StdEnv needs to be loaded first:
