@@ -298,6 +298,21 @@ sudo -i -u ebuser RSNT_ARCH=sse3 eb <name of easyconfig file>
 **Note:** The actual generated easyconfig will be saved into
 `/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo*`.
 
+### Installing for a different StdEnv
+
+The `StdEnv/2016.4` and `StdEnv/2018.3` are built on top of Nix while the `StdEnv/2020` is built on top of Gentoo.
+In order for EasyBuild to choose the correct toolchains and underlying Nix or Gentoo, a suitable StdEnv needs
+to be loaded before invoking `eb`.  
+As of September 2020, ob build-node the `StdEnv/2016.4` is still the default and good to compile software for 
+both `StdEnv/2016.4` and `StdEnv/2018.3`.
+
+So for building software for `StdEnv/2020`, the new StdEnv needs to be loaded first:
+
+```
+module load StdEnv/2020
+sudo -i -u ebuser eb <name of easyconfig file>
+```
+
 ### Creating or changing a recipe
 
 Because often a few things need changing in the easyconfig file we are going to
