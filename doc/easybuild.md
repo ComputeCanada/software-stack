@@ -451,6 +451,21 @@ be done with:
 eb <recipe.eb> --disable-enforce-checksums
 ```
 
+Note that if you are downloading your sources by [cloning from a git repository][eb-download-from-git],
+the checksums will change every time, because files will have different timestamps.
+
+In this case:
+
+* First run `eb <recipe.eb> --inject-checksums --force` from within your own 
+  account, which will create an archive under e.g.:
+  `~/.local/easybuild/m/MyPackage/MyPackage-1.0.1.tar.gz`.
+* Then manually copy that archive to the central source location: 
+  `/cvmfs/soft.computecanada.ca/easybuild/sources/m/MyPackage/`.
+* When building as ebuser, EasyBuild will find the sources in that location and
+  skip downloading them again.
+
+[eb-download-from-git]: https://easybuild.readthedocs.io/en/latest/Writing_easyconfig_files.html#downloading-from-a-git-repository
+
 ## Tips and tricks, troubleshooting
 
 ### Rebuilding installed software
