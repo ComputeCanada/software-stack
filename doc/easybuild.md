@@ -299,6 +299,15 @@ sudo -i -u ebuser RSNT_ARCH=sse3 eb <name of easyconfig file>
 **Note:** The actual generated easyconfig will be saved into
 `/cvmfs/soft.computecanada.ca/easybuild/ebfiles_repo*`.
 
+### Installing for multiple architectures and toolchains
+Quite often, we want to compile a recipe for multiple architectures, and possibly multiple toolchains. This can be done easily
+using `parallel`. For example, to build `HDF5-1.10.6` with both GCC and Intel-based OpenMPI, for both architectures `avx2` and `avx512`, you can execute : 
+
+```
+parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolchain={2} --disable-map-toolchains ::: avx2 avx512 ::: gompi,2020a iompi,2020a
+``` 
+
+
 ### Installing for a different StdEnv
 
 The `StdEnv/2016.4` and `StdEnv/2018.3` are built on top of Nix while the `StdEnv/2020` is built on top of Gentoo.
