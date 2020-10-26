@@ -8,6 +8,10 @@
 - [EasyBuild repositories](#easybuild-repositories)
 - [Nix repository](#nix-repository)
 
+## Before you begin
+As a Compute Canada staff, ensure that you have requested the proper permissions, and configured your account, as described on
+https://wiki.computecanada.ca/staff/RSNT_Software_-_Setting_up
+
 ## Git configuration
 
 If you plan to contribute to the software stack, make sure to configure your
