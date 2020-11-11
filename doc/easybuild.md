@@ -30,7 +30,7 @@ infrastructure. For detailed EasyBuild documentation, see:
 - [Installing a package in EasyBuild](#installing-a-package-in-easybuild)
   - [Installing for a different toolchain](#installing-for-a-different-different-toolchain)
   - [Installing for a different architecture](#installing-for-a-different-architecture)
-  - [Installing for multiple architecutres and toolchains](#installing-for-multiple-architectures-and-toolchains)
+  - [Installing for multiple architectures and toolchains](#installing-for-multiple-architectures-and-toolchains)
   - [Installing for a different StdEnv](#installing-for-a-different-stdenv)
   - [Creating or changing a recipe](#creating-or-changing-a-recipe)
   - [Checksums in EasyConfig recipes](#checksums-in-easyconfig-recipes)
