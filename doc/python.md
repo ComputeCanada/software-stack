@@ -111,11 +111,17 @@ and per architecture. They are located here:
                    └── avx512           Gentoo AVX512
 ```
 
+To get your wheel into CVMFS, you will want to either:
+
+* Manually copy the wheel to each architecture that is applicable
+* Use the [cp_wheels.sh](https://github.com/ComputeCanada/wheels_builder/blob/master/cp_wheels.sh) script to automatically determine the correct path(s).
+
+(The later is the prefered route.)
+
+Once the wheel is copied, you can sync to CVMFS, using the `--what custom-python` option of `rsnt-sync`. See the [CVMFS documentation](cvmfs.md).
 
 From then on, when a user runs a `pip install <package>`, if it is found in
-these paths, `pip` will use this version if our version is the most recent. Once
-the wheel is copied, you can sync to CVMFS, using the `--what custom-python`
-option of `rsnt-sync`.
+these paths, `pip` will use this version if our version is the most recent.
 
 ## Forcing the recompilation of existing binary packages
 
