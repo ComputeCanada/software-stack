@@ -28,6 +28,21 @@ actually pushed to CVMFS, none of it is visible to any users. It is therefore a
 good time to test the software before it is pushed to production. You can run
 small tests on this node, since it is dedicated to this purpose.
 
+## Testing with proot on the clusters (prefered method)
+
+On the clusters (Cedar, Graham and Béluga only), one can test the content of the
+`dev` repository by using `proot`. This would be done with the following
+command:
+
+```
+export PROOT_NO_SECCOMP=1
+/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/proot -b /cvmfs/soft-dev.computecanada.ca:/cvmfs/soft.computecanada.ca env -i CC_CLUSTER=$CC_CLUSTER TERM=$TERM HOME=$HOME bash -l
+```
+
+For the duration of this bash session, this will intercept each call to a path
+in `/cvmfs/soft.computecanada.ca`  and reroute it to the same path in
+`/cvmfs/soft-dev.computecanada.ca`.
+
 ## Testing with the test nodes
 
 You can push your newly installed software to the development CVMFS repository.
@@ -38,16 +53,3 @@ This will make it visible on all nodes that mount it. There are two such nodes:
 
 However, the production clusters do not see these software packages repository.
 
-## Testing with proot on the clusters
-
-On the clusters (Cedar, Graham and Béluga only), one can test the content of the
-`dev` repository by using `proot`. This would be done with the following
-command:
-
-```
-/cvmfs/soft.computecanada.ca/nix/var/nix/profiles/16.09/bin/proot -b /cvmfs/soft-dev.computecanada.ca:/cvmfs/soft.computecanada.ca env -i CC_CLUSTER=$CC_CLUSTER TERM=$TERM HOME=$HOME bash -l
-```
-
-For the duration of this bash session, this will intercept each call to a path
-in `/cvmfs/soft.computecanada.ca`  and reroute it to the same path in
-`/cvmfs/soft-dev.computecanada.ca`.
