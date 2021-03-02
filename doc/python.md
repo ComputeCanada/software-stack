@@ -114,7 +114,7 @@ and per architecture. They are located here:
 To get your wheel into CVMFS, you will want to either:
 
 * Manually copy the wheel to each architecture that is applicable
-* Use the [cp_wheels.sh](https://github.com/ComputeCanada/wheels_builder/blob/master/cp_wheels.sh) script to automatically determine the correct path(s).
+* Use the [cp_wheels.sh](https://github.com/ComputeCanada/wheels_builder/blob/main/cp_wheels.sh) script to automatically determine the correct path(s).
 
 (The later is the prefered route.)
 

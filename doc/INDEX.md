@@ -90,7 +90,7 @@ The following guidelines should be followed, although exceptions may arise.
 The current list of installed (via `emerge`) Gentoo packages is tracked in the
 `world` file (`/cvmfs/soft.computecanada.ca/gentoo/2020/var/lib/portage/world`,
 which is also copied
-[here](https://github.com/ComputeCanada/gentoo-overlay/blob/master/etc/portage/world);
+[here](https://github.com/ComputeCanada/gentoo-overlay/blob/main/etc/portage/world);
 the complete list including dependencies can be obtained using `equery list
 "*"`.
 

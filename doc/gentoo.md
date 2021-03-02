@@ -79,7 +79,7 @@ available in EasyBuild.
 
 To add a new package to Gentoo you will first need to create the package. As an
 example, we created this one for `opa-psm2` (OmniPath libraries):
-https://github.com/ComputeCanada/gentoo-overlay/blob/master/sys-fabric/opa-psm2/opa-psm2-11.2.86.ebuild.
+https://github.com/ComputeCanada/gentoo-overlay/blob/main/sys-fabric/opa-psm2/opa-psm2-11.2.86.ebuild.
 This file is as follows:
 
 ```

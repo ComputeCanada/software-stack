@@ -57,14 +57,14 @@ On the build-node:
 cd
 git clone https://github.com/ComputeCanada/easybuild-easyconfigs.git
 
-# Update repository and checkout the computecanada-master branch
+# Update repository and checkout the computecanada-main branch
 cd easybuild-easyconfigs/
 git pull
-git checkout computecanada-master
+git checkout computecanada-main
 ```
 
 From
-[`ANSYS-18.2.eb`](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-master/easybuild/easyconfigs/a/ANSYS/ANSYS-18.2.eb),
+[`ANSYS-18.2.eb`](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-main/easybuild/easyconfigs/a/ANSYS/ANSYS-18.2.eb),
 create `ANSYS-18.1.eb`. Update the version number and the path to the `tmi.conf`
 file:
 
@@ -113,9 +113,9 @@ If the test succeeds, publish the Easybuild file and do some cleanup:
 ```
 cd $HOME/easybuild-easyconfigs/easybuild/easyconfigs/a/ANSYS
 git add ANSYS-18.1.eb
-git pull origin computecanada-master
+git pull origin computecanada-main
 git commit -m "New ANSYS version 18.1"
-git push origin computecanada-master
+git push origin computecanada-main
 
 cd
 chmod -R u+w .local/easybuild

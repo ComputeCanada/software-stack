@@ -332,7 +332,7 @@ check out a git repository and work with that.
 ```
 cd easybuild-easyconfigs
 git pull
-git checkout computecanada-master
+git checkout computecanada-main
 ```
 
 Then you `cd` to the package, e.g.:
@@ -387,7 +387,7 @@ moduleclass = 'bio'
 ```
 
 Four changes were made from the original which can be found
-[here](http://github.com/computecanada/easybuild-easyconfigs/tree/computecanada-master/easybuild/easyconfigs/g/GROMACS/GROMACS-2016-foss-2016b-hybrid.eb):
+[here](http://github.com/computecanada/easybuild-easyconfigs/tree/computecanada-main/easybuild/easyconfigs/g/GROMACS/GROMACS-2016-foss-2016b-hybrid.eb):
 
 - Eliminating `versionsuffix`. In general we decided not to use version suffixes
   (such as `2016-hybrid`), using plain versions instead. If suffixes cannot be
@@ -413,9 +413,9 @@ satisfied with the local build, you can then add the file to the git repository:
 
 ```
 git add GROMACS-2016-iomkl-2016.4.11.eb
-git pull origin computecanada-master
+git pull origin computecanada-main
 git commit -m "commit message goes here"
-git push origin computecanada-master
+git push origin computecanada-main
 ```
 
 The final step to install it on the build node, is to pull it and install it as
@@ -698,16 +698,16 @@ the upstream repository, without merging them with your local
 version.
 
 The second step is to create a branch that will merge well both into the
-`upstream/develop` branch, and into the `origin/computecanada-master` branch. To
+`upstream/develop` branch, and into the `origin/computecanada-main` branch. To
 do so, you run:
 
 ```
-  git checkout -b mybranch $(git merge-base upstream/develop origin/computecanada-master)
+  git checkout -b mybranch $(git merge-base upstream/develop origin/computecanada-main)
 ```
 
 This will create a local branch called `mybranch` that spawns from the latest
 common intersection of the `upstream/develop` and the
-`origin/computecanada-master` branch. The reason why we do this is that this is
+`origin/computecanada-main` branch. The reason why we do this is that this is
 the simplest way to ensure that `mybranch` will be mergeable easily into the two
 branches.
 
@@ -729,14 +729,14 @@ Whenever you want to perform an installation on our build node, you then first
 want to run:
 
 ```
-git checkout computecanada-master
+git checkout computecanada-main
 git merge mybranch
 ```
 
 And optionally:
 
 ```
-git push origin computecanada-master
+git push origin computecanada-main
 ```
 
 If you want to perform an installation as `ebuser`.
@@ -760,7 +760,7 @@ will not merge the request unless their automated test suite can run on it. This
 means that the easyconfig must use one of their main toolchains.
 
 Once the pull request is merge, you can make a final merge of `mybranch` into
-the `computecanada-master` branch, and then delete your branch with:
+the `computecanada-main` branch, and then delete your branch with:
 
 ```
 git push origin -delete mybranch
