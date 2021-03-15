@@ -43,9 +43,6 @@ environment than the build node.
 
 ## How to deploy software on CVMFS
 
-**See also:** [Deploying restricted
-software](easybuild.md#deploying-posix-group-restricted-software-with-cvmfs)
-
 Switch to the user `libuser`:
 
 ```

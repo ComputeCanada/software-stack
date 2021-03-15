@@ -868,28 +868,7 @@ membership can be changed through the CCDB.
 
 ### Deploying POSIX group-restricted software with CVMFS
 
-**See also:** [Deploying software with CVMFS](cvmfs.md)
-
-Because POSIX group restricted software have binaries in the restricted
-repository, and modules in the public repository, you must start two
-transactions. One to `dev` or `prod` repository for the module, and one to the
-restricted repository. Here is an example:
-
-```
-sudo su - libuser
-
-sudo /etc/rsnt/start_transaction <dev|prod>
-sudo /etc/rsnt/start_transaction restricted
-
-/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
-
-sudo /etc/rsnt/publish_transaction restricted
-sudo /etc/rsnt/publish_transaction <dev|prod>
-
-exit
-```
-
-Note that changes will propagate to the clusters within 30 minutes.
+**See:** [Deploying to the restricted repository with CVMFS](cvmfs.md#deploying-to-the-restricted-repository-with-cvmfs)
 
 ### Hiding POSIX group-restricted software on systems that don’t have them
 
