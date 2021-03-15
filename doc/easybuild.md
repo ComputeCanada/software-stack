@@ -888,6 +888,23 @@ Existing POSIX groups to manage access to some software (CC staff links):
 - [soft_orca](https://ccdb.computecanada.ca/services/soft_orca)
 - [soft_gaussian](https://ccdb.computecanada.ca/services/soft_gaussian)
 
+## Installing datasets
+In rare occasions, a piece of software requires large datasets to be installed. If these are larger than 50GB or
+if they contain many files larger than 1GB, they should be installed in the `data.rsnt` repository. Interproscan is
+such an example. Part of the software is a dataset named `panther`. It can be installed as such: 
+```
+eb panther-14.1-system.eb --installpath-software=/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/
+``` 
+This will install the data inside of `/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/`, while the module will
+be installed under `/cvmfs/soft.computecanada.ca/easybuild/modules`. Synchronizing to CVMFS is then performed in the same way
+as for restricted software, by starting transactions on two different repositories. 
+
+### Deploying datasets with CVMFS
+
+**See:** [Deploying datasets with CVMFS](cvmfs.md#deploying-datasets-with-cvmfs)
+
+
+
 ## FAQ
 
 **Q:** Is there any way we can find who built a module?

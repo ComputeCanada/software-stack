@@ -17,11 +17,12 @@ This page covers only essential information about using CVMFS with our
 infrastructure and software stack. For complete CVMFS documentation, see the
 [official website](https://cvmfs.readthedocs.io/en/stable/).
 
-There are three repositories to which we have access:
+There are four repositories to which we have access:
 
 - **dev:** `/cvmfs/soft-dev.computecanada.ca`
 - **prod:** `/cvmfs/soft.computecanada.ca`
 - **restricted:** `/cvmfs/restricted.computecanada.ca`
+- **data:** `/cvmfs/data.rsnt.computecanada.ca`
 
 You can use the dev version to push files and see that synchronization happens
 correctly. However, pushing installed software to the dev repository will not
@@ -52,7 +53,7 @@ sudo su - libuser
 As `libuser`, start a transaction:
 
 ```
-sudo /etc/rsnt/start_transaction <dev|prod|restricted>
+sudo /etc/rsnt/start_transaction <dev|prod|restricted|data>
 ```
 
 Then synchronize the files needed. You can sync manually, but to avoid most
@@ -139,6 +140,26 @@ sudo /etc/rsnt/start_transaction restricted
 /etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
 
 sudo /etc/rsnt/publish_transaction restricted
+sudo /etc/rsnt/publish_transaction <dev|prod>
+
+exit
+```
+
+### Deploying datasets with CVMFS
+Similarly to restricted software, datasets have data sitting in the `data.rsnt` repository
+and modules in the public repository. Because of that,  you must start two
+transactions. One to `dev` or `prod` repository for the module, and one to the
+`data` repository. Here is an example:
+
+```
+sudo su - libuser
+
+sudo /etc/rsnt/start_transaction <dev|prod>
+sudo /etc/rsnt/start_transaction data
+
+/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+
+sudo /etc/rsnt/publish_transaction data
 sudo /etc/rsnt/publish_transaction <dev|prod>
 
 exit
