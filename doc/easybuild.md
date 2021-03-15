@@ -123,7 +123,7 @@ Please stick with one of the standard CC toolchains, unless you have a good
 reason not to. To get a complete up-to-date list of available toolchains, see
 the above instructions.
 
-Note that the `iomkl,2016.4.11` toolchain and its subtoolchains `iompi`,
+Note that the `iomkl,2020a` toolchain and its subtoolchains `iompi`,
 `iimkl`, and `iccifort` are the main toolchains that we use; its components are
 loaded by default when logging into the system.
 
@@ -140,7 +140,7 @@ Core toolchains are not dependent on a specific compiler:
 - `SYSTEM` in easyconfigs or `system,system` for `--try-toolchain`: For
   binary-only installations, and codes without architecture-dependent
   optimization.
-- `GCCcore,9.3.0`: For the Gentoo based `StdEnv/2020` stack, this uses an
+- `GCCcore,9.3.0`: This uses an
   EasyBuild-provided GCC 9.3.0 with architecture-dependent optimization. It can
   be combined with MKL in the `gcccoremkl,2020a` toolchain. This toolchain is
   useful for codes that don't use MPI and are not typically compiled with the
@@ -149,7 +149,8 @@ Core toolchains are not dependent on a specific compiler:
 #### Compiler-only toolchains
 
 - iccifort: 2020.1.217
-- GCC: 8.4.0, 9.3.0
+- GCC: 8.4.0, 9.3.0, 10.2.0
+- NVHPC: 20.7
 
 #### Family toolchains
 
