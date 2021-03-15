@@ -232,7 +232,7 @@ If the recipe you want to use already exists but uses the a different toolchain,
 you can sometimes install it using a single command:
 
 ```
-sudo -i -u ebuser eb HPL-2.2-intel-2017.01.eb --try-toolchain=iomkl,2016.4.11
+sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iomkl,2020a
 ```
 
 **Note:** The actual generated easyconfig will be saved into
