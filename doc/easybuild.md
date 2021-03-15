@@ -895,18 +895,8 @@ Note that changes will propagate to the clusters within 30 minutes.
 
 Some systems may have access to the public software stack, but not to the
 restricted repository. In this case, we want to hide the modules for the
-restricted pieces of software. To do so, we edit the file
-`/cvmfs/soft.computecanada.ca/config/lmod/modulerc`.
-
-For example, as of May 12th 2017, this file contains:
-
-```
-if {![file isdirectory /cvmfs/restricted.computecanada.ca/easybuild]} {
-        hide-version dl_poly4/4.08
-}
-```
-
-Add other restricted software to this list.
+restricted pieces of software. This is done in the file
+[/cvmfs/soft.computecanada.ca/config/lmod/SitePackage_visible.lua](https://github.com/ComputeCanada/software-stack-config/blob/main/lmod/SitePackage_visible.lua)
 
 ### Existing POSIX groups to manage access to pieces of software
 
