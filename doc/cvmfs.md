@@ -65,7 +65,7 @@ want to run one of the commands below, with the most common at the top:
 ```
 # Note: <software name> must be lowercase module name, regardless of what the recipe is named ...
 /etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
-/etc/rsnt/rsnt-sync --what nix
+/etc/rsnt/rsnt-sync --what gentoo
 /etc/rsnt/rsnt-sync --what custom --path <path>
 /etc/rsnt/rsnt-sync --what config
 /etc/rsnt/rsnt-sync --what easybuild-recipes
@@ -142,7 +142,7 @@ them is obtained by running:
 As of Sept. 6th, 2017, the options are:
 
 ```
-/etc/rsnt/rsnt-sync --what <nix|config|easybuild|custom> \
+/etc/rsnt/rsnt-sync --what <gentoo|config|easybuild|custom> \
   [--software <software name>] \
   [--version <software version>] \
   [--architecture <architecture>] \

@@ -91,13 +91,13 @@ You should minimally test that the package imports correctly without error. If
 there are tests available for this specific package, please run them. Once you
 are satisfied that it works, you need to copy this binary to our wheelhouse.
 
-We have a hierarchical wheelhouse layout per OS-abstraction layer (NIX, Gentoo)
+We have a hierarchical wheelhouse layout per OS-abstraction layer (Gentoo)
 and per architecture. They are located here:
 
 ```
 /cvmfs/soft.computecanada.ca/custom/python/wheelhouse
                ├── generic              totally generic
-               ├── nix/
+               ├── nix/  **DEPRECATED**
                │   ├── generic          NIX but arch-independent
                │   ├── sse3             NIX SSE3 and above
                │   ├── avx              NIX AVX  and above

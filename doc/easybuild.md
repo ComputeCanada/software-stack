@@ -40,7 +40,6 @@ infrastructure. For detailed EasyBuild documentation, see:
   - [Fixing the loader and runpath](#fixing-the-loader-and-runpath)
   - [Dependencies](#dependencies)
   - [Debugging your build](#debugging-your-build)
-  - [Nix hardening](#nix-hardening)
   - [Providing the source distribution](#providing-the-source-distribution)
   - [Other topics to be covered in the future](#other-topics-to-be-covered-in-the-future)
 - [Contributing back to EasyBuild](#contributing-back-to-easybuild)
@@ -143,8 +142,6 @@ Core toolchains are not dependent on a specific compiler:
 - `SYSTEM` in easyconfigs or `system,system` for `--try-toolchain`: For
   binary-only installations, and codes without architecture-dependent
   optimization.
-- `GCCcore,5.4.0`: For Nix, "Core" uses only components provided by Nix (GCC
-  5.4.0) without architecture-dependent optimization.
 - `GCCcore,9.3.0`: For the Gentoo based `StdEnv/2020` stack, this uses an
   EasyBuild-provided GCC 9.3.0 with architecture-dependent optimization. It can
   be combined with MKL in the `gcccoremkl,2020a` toolchain. This toolchain is
@@ -311,18 +308,10 @@ parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolc
 
 ### Installing for a different StdEnv
 
-The `StdEnv/2016.4` and `StdEnv/2018.3` are built on top of Nix while the `StdEnv/2020` is built on top of Gentoo.
-In order for EasyBuild to choose the correct toolchains and underlying Nix or Gentoo, a suitable StdEnv needs
-to be loaded before invoking `eb`.  
-As of September 2020, on build-node the `StdEnv/2016.4` is still the default and good to compile software for 
-both `StdEnv/2016.4` and `StdEnv/2018.3`.
-
-So for building software for `StdEnv/2020`, the new StdEnv needs to be loaded first:
-
-```
-module load StdEnv/2020
-sudo -i -u ebuser eb <name of easyconfig file>
-```
+The `StdEnv/2020` is built on top of Gentoo.
+In order for EasyBuild to choose the correct toolchains and underlying Gentoo, a suitable StdEnv needs
+to be loaded before invoking `eb`. 
+As of March 15th, 2020, on build-node, `StdEnv/2020` is the default environment. 
 
 ### Creating or changing a recipe
 
@@ -505,7 +494,7 @@ Once the source is there, you will be able to install the package.
 ### Fixing the loader and runpath
 
 As a design decision, we are typically not setting `LD_LIBRARY_PATH` in software
-modules. Instead, our compilers ensure that the correct Nix loader ("ELF
+modules. Instead, our compilers ensure that the correct Gentoo loader ("ELF
 interpreter") is used by the binaries and therefore locates appropriate OS
 libraries. This works well for things that we compile ourselves. However, for
 software that is installed in a binary form, and for some compiled software, it
@@ -523,7 +512,7 @@ setrpaths.sh --path <path>
 *runpath* to setting the loader, its historical name `setrpath.sh` remained
 the same for backward compatibility reasons.
 
-If the interpreter used by the binary is already our local Nix interpreter, the
+If the interpreter used by the binary is already our local Gentoo interpreter, the
 script will not patch anything as it is supposed to be working correctly from
 the compilation step. Sometimes, however, the binary still needs to be patched,
 and a special option `--any_interpreter` can force it:
@@ -619,30 +608,6 @@ cd /dev/shm/$USER/avx2/NAMD/2.13b2/iimkl-2016.4-multicore/NAMD_2.13b2_Source/
 ```
 
 At this point you run the precise build step command which failed.
-
-### Nix hardening
-
-By default, Nix does hardening of ELF binaries. We have actually removed most of
-it for things compiled outside of `nix-env` except for the `-z,relro -z,now`
-settings, which correspond to [Full
-RELRO](https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro).
-
-In rare cases, when lazy binding (symbol resolution) is used (see, for example,
-[Ticket #044066](https://support.computecanada.ca/otrs/index.pl?Action=AgentTicketZoom;TicketID=44131#246597)
-(CC staff link), Full RELRO can prevent shared libraries from being loaded.
-Switching to Partial RELRO, by disabling `-z,now` will resolve the issue. This
-can be accomplished by setting an environment variable at the linking stage like
-so: `export hardeningDisable=bindnow`.
-
-We are currently considering removing `-z, now` in Nix and therefore switching
-to Partial RELRO. Note that Partial RELRO is already the default in binutils
-since 2.27 (we use 2.28).
-
-To summarize:
-
-- Full RELRO -> `-z,relro -z,now` (current Nix mode)
-- Partial RELRO -> `-z,relro` (default in recent binutils)
-- To switch from Full to Partial right now use `export hardeningDisable=bindnow`
 
 ### Providing the source distribution
 

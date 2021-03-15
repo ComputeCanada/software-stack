@@ -6,7 +6,7 @@
 
 - [Git configuration](#git-configuration)
 - [EasyBuild repositories](#easybuild-repositories)
-- [Nix repository](#nix-repository)
+- [Gentoo repository](#gentoo-repository)
 
 ## Before you begin
 As a Compute Canada staff, ensure that you have requested the proper permissions, and configured your account, as described on
@@ -68,12 +68,12 @@ contains the proper `url` setting like shown below:
 url = git@github.com:ComputeCanada/easybuild-easyconfigs.git
 ```
 
-## Nix repository
+## Gentoo repository
 
-Software installers rarely need to use Nix. However, should this be your case,
-you can clone our fork of the `nixpkgs` repository using:
+Software installers rarely need to use Gentoo. However, should this be your case,
+you can clone our `gentoo-overlay` repository using:
 
 ```
 cd
-git clone https://github.com/ComputeCanada/nixpkgs.git
+git clone https://github.com/ComputeCanada/gentoo-overlay.git
 ```
