@@ -24,8 +24,6 @@ infrastructure. For detailed EasyBuild documentation, see:
     - [Compiler-only toolchains](#compiler-only-toolchains)
     - [Compiler-only toolchains (Gentoo stack)](#compiler-only-toolchains-gentoo-stack)
     - [Family toolchains](#family-toolchains)
-    - [Default Toolchains for StdEnv/2016.4](#default-toolchains-for-stdenv20164)
-    - [Default Toolchains for StdEnv/2018.3](#default-toolchains-for-stdenv20183)
     - [Toolchains to use with StdEnv/2020](#toolchains-to-use-with-stdenv2020)
 - [Installing a package in EasyBuild](#installing-a-package-in-easybuild)
   - [Installing for a different toolchain](#installing-for-a-different-different-toolchain)
@@ -150,12 +148,6 @@ Core toolchains are not dependent on a specific compiler:
 
 #### Compiler-only toolchains
 
-- iccifort: 2014.6, 2016.4, 2017.1, 2017.5, 2018.3, 2019.3
-- GCC: 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.3.0, 8.3.0, 9.1.0
-- PGI: 13.10, 16.9, 17.3, 19.4
-
-#### Compiler-only toolchains (Gentoo stack)
-
 - iccifort: 2020.1.217
 - GCC: 8.4.0, 9.3.0
 
@@ -172,39 +164,6 @@ MPI]]]**, for example:
 To better understand naming patterns for family toolchains, see the tables
 below.
 
-#### Default Toolchains for StdEnv/2016.4
-
-```
-|----------------------------------|------------------------|-------------------|-----------------|
-|                                  |          Intel         |        GCC        |    PGI          |
-|----------------------------------|------------------------|-------------------|-----------------|
-| Compiler only                    |     iccifort-2016.4    |     GCC-5.4.0     |    pgi-17.3     |
-| Compiler            + MKL        |        iimkl-2016.4    |    gmkl-2016.4    |                 |
-| Compiler + Open MPI              |        iompi-2016.4.11 |   gompi-2016.4.11 | pompi-2017.1.11 |
-| Compiler + Open MPI + MKL        |        iomkl-2016.4.11 |   gomkl-2016.4.11 | pomkl-2017.1.11 |
-| Compiler                  + Cuda | iccifortcuda-2016.4    | gcccuda-2016.4    |                 |
-| Compiler + Open MPI       + Cuda |       iompic-2016.4.11 |  gompic-2016.4.11 |                 |
-| Compiler            + MKL + Cuda |       iimklc-2016.4    |   gmklc-2016.4    |                 |
-| Compiler + Open MPI + MKL + Cuda |       iomklc-2016.4.11 |  gomklc-2016.4.11 |                 |
-|----------------------------------|------------------------|-------------------|-----------------|
-```
-
-#### Default Toolchains for StdEnv/2018.3
-
-```
-|----------------------------------|-----------------------------|------------------------|
-|                                  |            Intel            |          GCC           |
-|----------------------------------|-----------------------------|------------------------|
-| Compiler only                    |     iccifort-2018.3         |     GCC-7.3.0          |
-| Compiler            + MKL        |        iimkl-2018.3         |    gmkl-2018.3         |
-| Compiler + Open MPI              |        iompi-2018.3.312     |   gompi-2018.3.312     |
-| Compiler + Open MPI + MKL        |        iomkl-2018.3.312     |   gomkl-2018.3.312     |
-| Compiler                  + Cuda | iccifortcuda-2018.3.100     | gcccuda-2018.3.100     |
-| Compiler + Open MPI       + Cuda |       iompic-2018.3.312.100 |  gompic-2018.3.312.100 |
-| Compiler            + MKL + Cuda |       iimklc-2018.3.100     |   gmklc-2018.3.100     |
-| Compiler + Open MPI + MKL + Cuda |       iomklc-2018.3.312.100 |  gomklc-2018.3.312.100 |
-|----------------------------------|-----------------------------|------------------------|
-```
 
 #### Toolchains to use with StdEnv/2020
 ```
