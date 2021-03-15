@@ -594,11 +594,7 @@ step where the failure occurred, and then attempt to repeat that particular step
 
 To get a clear understanding of where the error occurs, it is often useful to
 run the non-parallel build, so that errors are given in the output log file in
-the correct order. To do this, add to the `.eb` file the line:
-
-```
-maxparallel = 1
-```
+the correct order. To do this, add the option `--sequential` to your `eb` command. 
 
 Once you identify the line in the build process that causes the error, you can
 have `eb` dump the environment used during the building, source that
@@ -606,16 +602,27 @@ environment, and then navigate to the build directory (included in each `eb`
 build output). For example:
 
 ```
-eb NAMD-2.13b2-iimkl-2016.4-multicore.eb
+eb igraph-0.8.2-gcccoremkl-2020a.eb
 (... some error happens ...)
-eb NAMD-2.13b2-iimkl-2016.4-multicore.eb --dump-env-script
+eb igraph-0.8.2-gcccoremkl-2020a.eb --dump-env-script
 module --force purge
-module load nixpkgs/16.09
-source NAMD-2.13b2-iimkl-2016.4-multicore.env
-cd /dev/shm/$USER/avx2/NAMD/2.13b2/iimkl-2016.4-multicore/NAMD_2.13b2_Source/
+module load StdEnv/2020
+source igraph-0.8.2-gcccoremkl-2020a.env
+cd /tmp/$USER/avx2/igraph/0.8.2/gcccoremkl-2020a/igraph-0.8.2/
 ```
 
 At this point you run the precise build step command which failed.
+
+To figure out which commands were run by EasyBuild, you can use `grep` to find
+instances of `run.py` in the log file: 
+```
+grep run.py /tmp/eb-gqqs_1w0/easybuild-wszpn04e.log
+== 2021-03-15 18:45:09,532 run.py:222 INFO running cmd: type module
+== 2021-03-15 18:45:26,032 run.py:222 INFO running cmd: tar xzf /home/mboisson/.local/easybuild/sources/i/igraph/igraph-0.8.2.tar.gz
+== 2021-03-15 18:45:29,915 run.py:222 INFO running cmd: /home/mboisson/.local/easybuild/sources/generic/eb_v4.3.3/ConfigureMake/config.guess
+== 2021-03-15 18:45:29,960 run.py:538 INFO cmd "/home/mboisson/.local/easybuild/sources/generic/eb_v4.3.3/ConfigureMake/config.guess" exited with exit code 0 and output:
+== 2021-03-15 18:45:29,961 run.py:222 INFO running cmd: autoreconf -i && sed -i 's/-lblas/$LIBBLAS/' configure && sed -i 's/-llapack/$LIBLAPACK/' configure &&  ./configure --prefix=/home/mboisson/.local/easybuild/software/2020/avx2/Core/igraph/0.8.2  --build=x86_64-pc-linux-gnu  --host=x86_64-pc-linux-gnu --with-external-blas --with-external-lapack --with-external-glpk
+``` 
 
 ### Providing the source distribution
 
