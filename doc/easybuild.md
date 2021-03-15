@@ -287,7 +287,7 @@ git checkout computecanada-main
 Then you `cd` to the package, e.g.:
 
 ```
-cd easybuild/easyconfigs/g/GROMACS
+cd easybuild/easyconfigs/i/igraph
 ```
 
 And create a new easyconfig to make modifications in:
