@@ -127,6 +127,26 @@ sudo /etc/rsnt/start_transaction prod
 sudo /etc/rsnt/publish_transaction prod
 ```
 
+### Deploying to the restricted repository with CVMFS
+Software installed in the restricted repository have binaries in the restricted
+repository, and modules in the public repository. Because of that,  you must start two
+transactions. One to `dev` or `prod` repository for the module, and one to the
+`restricted` repository. Here is an example:
+
+```
+sudo su - libuser
+
+sudo /etc/rsnt/start_transaction <dev|prod>
+sudo /etc/rsnt/start_transaction restricted
+
+/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+
+sudo /etc/rsnt/publish_transaction restricted
+sudo /etc/rsnt/publish_transaction <dev|prod>
+
+exit
+```
+
 ## Advanced options to the `rsnt-sync` script
 
 The `rsnt-sync` script accepts many options. The most current information about
