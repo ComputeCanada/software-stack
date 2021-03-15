@@ -293,64 +293,112 @@ cd easybuild/easyconfigs/g/GROMACS
 And create a new easyconfig to make modifications in:
 
 ```
-cp GROMACS-2016-foss-2016b-hybrid.eb GROMACS-2016-iomkl-2016.4.11.eb
+cp igraph-0.8.2-foss-2020a.eb igraph-0.8.2-gcccoremkl-2020a.eb
 ```
 
-The change from `foss-2016b` to `iomkl-2016.4.11` is a toolchain change. We do
+The change from `foss-2020a` to `gcccoremkl-2020a` is a toolchain change. We do
 not expose the toolchains to users but use them internally to denote compiler,
 MPI and linear algebra combinations.
 
-File `GROMACS-2016-iomkl-2016.4.11.eb` is then edited as follows:
+File `igraph-0.8.2-gcccoremkl-2020a.eb` is then edited as follows:
 
 ```
-##
-# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
-#
-# Copyright:: Copyright 2012-2016 University of Luxembourg / LCSB, Cyprus Institute / CaSToRC,
-#                                 Ghent University / The Francis Crick Institute
-# Authors::
-# * Wiktor Jurkowski <wiktor.jurkowski@gmail.com>
-# * Fotis Georgatos <fotis@cern.ch>
-# * George Tsouloupas <g.tsouloupas@cyi.ac.cy>
-# * Kenneth Hoste <kenneth.hoste@ugent.be>
-# * Adam Huffman <adam.huffman@crick.ac.uk>
-# License::   MIT/GPL
-##
+easyblock = 'ConfigureMake'
 
-name = 'GROMACS'
-version = '2016'
+name = 'igraph'
+version = '0.8.2'
 
-homepage = 'http://www.gromacs.org'
-description = """GROMACS is a versatile package to perform molecular dynamics,
- i.e. simulate the Newtonian equations of motion for systems with hundreds to millions of particles."""
+homepage = 'https://igraph.org'
+description = """igraph is a collection of network analysis tools with the emphasis on
+efficiency, portability and ease of use. igraph is open source and free. igraph can be
+programmed in R, Python and C/C++."""
 
-toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
-toolchainopts = {'openmp': True, 'usempi': True}
-source_urls = ['ftp://ftp.gromacs.org/pub/gromacs/']
-sources = [SOURCELOWER_TAR_GZ]
+toolchain = {'name': 'gcccoremkl', 'version': '2020a'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
+sources = ['%(name)s-%(version)s.tar.gz']
+checksums = ['718a471e7b8cbf02e3e8006153b7be6a22f85bb804283763a0016280e8a60e95']
+
 builddependencies = [
-   ('Boost', '1.62.0'),
+    ('Autotools', '20180311'),
+    ('pkg-config', '0.29.2'),
 ]
 
-moduleclass = 'bio'
+dependencies = [
+    ('GLPK', '4.65'),
+    ('libxml2', '2.9.10'),
+    ('zlib', '1.2.11'),
+]
+
+preconfigopts = "autoreconf -i && "
+# Remove hardcoded links to BLAS/LAPACK
+preconfigopts += "sed -i 's/-lblas/$LIBBLAS/' configure && "
+preconfigopts += "sed -i 's/-llapack/$LIBLAPACK/' configure && "
+
+configopts = "--with-external-blas --with-external-lapack --with-external-glpk"
+
+multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
+multi_deps_extensions_only = True
+
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+
+sanity_check_paths = {
+    'files': ['lib/libigraph.%s' % x for x in [SHLIB_EXT, 'la', 'a']] + ['lib/pkgconfig/igraph.pc'] +
+             ['include/igraph/igraph%s.h' % x for x in ['', '_blas', '_constants', '_lapack', '_types', '_version']],
+    'dirs': [],
+}
 ```
 
-Four changes were made from the original which can be found
-[here](http://github.com/computecanada/easybuild-easyconfigs/tree/computecanada-main/easybuild/easyconfigs/g/GROMACS/GROMACS-2016-foss-2016b-hybrid.eb):
+Two changes were made from the original which can be found
+[here](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-main/easybuild/easyconfigs/i/igraph/igraph-0.8.2-foss-2020a.eb):
 
-- Eliminating `versionsuffix`. In general we decided not to use version suffixes
-  (such as `2016-hybrid`), using plain versions instead. If suffixes cannot be
-  avoided we can make them part of the name.
-- Changing the toolchain to `iomkl,2016.4.11`.
-- Remove the CMake `builddependency` (already provided by Nix).
-- Updating the Boost dependency from 1.61.0 to 1.62.0 to match what is already
-  installed (use the `module spider boost` command to find out).
+- Changing the toolchain to `gcccoremkl,2020a`. It is quite frequent that the upstream versions
+of EasyBuild recipes use an over-complete toolchain, i.e. a toolchain which includes dependencies that
+are not needed. In this example, the upstream recipe uses "foss" which includes OpenMPI, but igraph does
+not use OpenMPI. We "downgrade" the toolchain to gcccoremkl, which uses GCC and MKL.
+- Adding the section for Python extensions: 
+```
+multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
+multi_deps_extensions_only = True
 
-The GROMACS package can then be test-built and tested using this syntax:
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+``` 
+When it makes sense, we try to install the python bindings alongside the main
+code. In this case, we install the `python-igraph` package. Whenever possible, we
+also try to install it for multiple versions of python. This is done with the 
+`multi_deps` option. Finally, the `EBPYTHONPREFIXES` environment variable is used by
+our python configuration to find packages compatible with the version of python that
+is being used.
+
 
 ```
-eb GROMACS-2016-iomkl-2016.4.11.eb
-module load intel/2016.4 openmpi/2.1.1 gromacs/2016
+eb igraph-0.8.2-gcccoremkl-2020a.eb
+module load igraph/0.8.2
 ```
 
 Please refer to the [Checksums in EasyConfig
@@ -361,7 +409,7 @@ This uses the file that you just changed in the current directory. Once you are
 satisfied with the local build, you can then add the file to the git repository:
 
 ```
-git add GROMACS-2016-iomkl-2016.4.11.eb
+git add igraph-0.8.2-gcccoremkl-2020a.eb
 git pull origin computecanada-main
 git commit -m "commit message goes here"
 git push origin computecanada-main
@@ -372,7 +420,7 @@ the user `ebuser`; the first command syncs the channel from GitHub:
 
 ```
 sudo -iu ebuser eb-pull-cc
-sudo -iu ebuser eb GROMACS-2016-iomkl-2016.4.11.eb
+sudo -iu ebuser eb igraph-0.8.2-gcccoremkl-2020a.eb
 ```
 
 Note that if you installed the package in your own account, that version will
