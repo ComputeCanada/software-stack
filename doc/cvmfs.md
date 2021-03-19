@@ -17,11 +17,12 @@ This page covers only essential information about using CVMFS with our
 infrastructure and software stack. For complete CVMFS documentation, see the
 [official website](https://cvmfs.readthedocs.io/en/stable/).
 
-There are three repositories to which we have access:
+There are four repositories to which we have access:
 
 - **dev:** `/cvmfs/soft-dev.computecanada.ca`
 - **prod:** `/cvmfs/soft.computecanada.ca`
 - **restricted:** `/cvmfs/restricted.computecanada.ca`
+- **data:** `/cvmfs/data.rsnt.computecanada.ca`
 
 You can use the dev version to push files and see that synchronization happens
 correctly. However, pushing installed software to the dev repository will not
@@ -43,9 +44,6 @@ environment than the build node.
 
 ## How to deploy software on CVMFS
 
-**See also:** [Deploying restricted
-software](easybuild.md#deploying-posix-group-restricted-software-with-cvmfs)
-
 Switch to the user `libuser`:
 
 ```
@@ -55,7 +53,7 @@ sudo su - libuser
 As `libuser`, start a transaction:
 
 ```
-sudo /etc/rsnt/start_transaction <dev|prod|restricted>
+sudo /etc/rsnt/start_transaction <dev|prod|restricted|data>
 ```
 
 Then synchronize the files needed. You can sync manually, but to avoid most
@@ -65,14 +63,11 @@ want to run one of the commands below, with the most common at the top:
 ```
 # Note: <software name> must be lowercase module name, regardless of what the recipe is named ...
 /etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
-/etc/rsnt/rsnt-sync --what nix
+/etc/rsnt/rsnt-sync --what gentoo
 /etc/rsnt/rsnt-sync --what custom --path <path>
 /etc/rsnt/rsnt-sync --what config
 /etc/rsnt/rsnt-sync --what easybuild-recipes
 ```
-
-Note: the option `custom-python` exists as a backward compatibility to
-synchronize all python wheels.
 
 For more advanced options, see the section below.
 
@@ -130,6 +125,46 @@ sudo /etc/rsnt/start_transaction prod
 sudo /etc/rsnt/publish_transaction prod
 ```
 
+### Deploying to the restricted repository with CVMFS
+Software installed in the restricted repository have binaries in the restricted
+repository, and modules in the public repository. Because of that,  you must start two
+transactions. One to `dev` or `prod` repository for the module, and one to the
+`restricted` repository. Here is an example:
+
+```
+sudo su - libuser
+
+sudo /etc/rsnt/start_transaction <dev|prod>
+sudo /etc/rsnt/start_transaction restricted
+
+/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+
+sudo /etc/rsnt/publish_transaction restricted
+sudo /etc/rsnt/publish_transaction <dev|prod>
+
+exit
+```
+
+### Deploying datasets with CVMFS
+Similarly to restricted software, datasets have data sitting in the `data.rsnt` repository
+and modules in the public repository. Because of that,  you must start two
+transactions. One to `dev` or `prod` repository for the module, and one to the
+`data` repository. Here is an example:
+
+```
+sudo su - libuser
+
+sudo /etc/rsnt/start_transaction <dev|prod>
+sudo /etc/rsnt/start_transaction data
+
+/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+
+sudo /etc/rsnt/publish_transaction data
+sudo /etc/rsnt/publish_transaction <dev|prod>
+
+exit
+```
+
 ## Advanced options to the `rsnt-sync` script
 
 The `rsnt-sync` script accepts many options. The most current information about
@@ -139,39 +174,39 @@ them is obtained by running:
 /etc/rsnt/rsnt-sync --help
 ```
 
-As of Sept. 6th, 2017, the options are:
+As of March 15th, 2021, the help reads as: 
 
 ```
-/etc/rsnt/rsnt-sync --what <nix|config|easybuild|custom> \
-  [--software <software name>] \
-  [--version <software version>] \
-  [--architecture <architecture>] \
-  [--root_path <software root path>] \
-  [--modules-only] [--software-only] [--no-size-only] \
-  [--repo <dev|prod>] \
-  [--path <source path>]
+Usage: /etc/rsnt/rsnt-sync --what <nix|nix-store|gentoo|custom|config|easybuild|easybuild-recipes> [--repo <dev|prod|restricted|data>] [--path <source path>] [--dry-run] [--full] [--no-size-only] [--no-ignore-times] [--profile <profile>] [--software <software name> [--year <2017|2020>] [--version <software version] [--architecture <software architecture>] [--root_path <software root path>]] [[--modules-only]] [[--exclude <PATTERN>]] [[--no-delete]]
+
+  If synchronizing with "--what nix", "--what nix-store", "--what gentoo", "--what custom", "--what gentoo", or "--what config", no path is required.
+  If synchronizing with "--what easybuild", you must provide the path to the folder that is to be synchronized.
+  The path provided is relative to /cvmfs/soft.computecanada.ca/easybuild
+  If synchronizing with "--what custom", you must provide the path to the folder that is to be synchronized.
+  The path provided is relative to /cvmfs/soft.computecanada.ca/custom
+
+  If no repository is provided, the synchronization will detect what repository is currently in a transaction and use this one.
+  Make sure that you have first started a transaction to this repository.
+  When synchronizing to the dev repository, the source folder will be the local /cvmfs.
+  When synchronizing to the prod repository, the source folder is the dev repository.
+  The option --full will synchronize all of either easybuild or nix. It should only be used if a full sync is needed to correct a problem after a failed sync
+  The option --no-size-only disables the flag --size-only which is enabled by default
+  The option --no-ignore-times disables the flag --ignore-times which is enabled by default
+  The option --profile allows to specify a specific nix profile to be synchronized. If not specified, all current versions of profiles are synchronized, and outdated software versions are deleted. Not available for synchronizing to production.
+  The option --software can be used to specify to synchronize a specific EasyBuild-installed software. Unless --version is specified, all versions of the software will be synchronized.
+  The option --version can be used to synchronize only a specific version of a software to synchronize.
+  The option --architecture can be used to synchronize a given software only for a specific architecture.
+  The option --root_path can be used to synchronize a given software only within a specific root path (for example Cuda, Compilers or MPI).
+  The option --modules-only will synchronize only modules and will ignore software.
+  The option --software-only will synchronize only software and will ignore modules.
+  The option --exclude <PATTERN> will exclude a pattern from the rsync command.
+  The option --no-delete removes the --delete flag from rsync
+  The option --year <2017|2020> will allow to select only software under the 2017 or 2020 subfolder of EasyBuild
 ```
 
 Most of these options are useful only for synchronizing something installed via
 EasyBuild. The following are designed to be used with `--software <software
-name>`:
-
-- `--version <software version>`: will synchronize only a specific version
-- `--architecture <architecture>`: will synchronize only for a specific
-  architecture
-- `--root_path <software root path>`: will synchronize only software installed
-  within a specific root path below the `easybuild/{software,modules}` folders.
-- `--module-only`: will skip synchronizing the `software` folder
-- `--software-only`: will skip synchronizing the `modules` folder
-
-The option `--repo` allows you to specify a repository to synchronize to.
-Typically, this is automatically detected (provided that you have a transaction
-opened only on one repository).
-
-The option `--path` allows you to synchronize a specific path only. The path
-specified is relative to the repository (i.e. relative to
-`/cvmfs/soft.computecanada.ca/easybuild`) and should NOT include a trailing
-slash.
+name>`.
 
 ## Examples of `rsnt-sync` commands
 
@@ -193,29 +228,6 @@ slash.
 /etc/rsnt/rsnt-sync --what easybuild --software gromacs --version 5.1.4 --architecture avx
 ```
 
-- To synchronize all builds of GROMACS 5.1.4 for architecture `avx2` under the
-  `/cvmfs/soft.computecanada.ca/easybuild/{software,modules}/MPI/intel2016.4/openmpi2.0.2`
-  path:
-
-```
-/etc/rsnt/rsnt-sync --what easybuild --software gromacs --version 5.1.4 --architecture avx2 --root_path MPI/intel2016.4/openmpi2.0.2
-```
-
-- To synchronize the path
-  `/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx2/MPI/intel2016.4/openmpi2.0/boost`,
-  you would run:
-
-```
-/etc/rsnt/rsnt-sync --what easybuild --path software/2017/avx2/MPI/intel2016.4/openmpi2.0/boost
-```
-
-You would then need to synchronize the corresponding path in the `modules`
-subdirectory to synchronize the module as well as the software:
-
-```
-/etc/rsnt/rsnt-sync --what easybuild --path modules/2017/avx2/MPI/intel2016.4/openmpi2.0/boost
-```
-
 - To synchronize some configuration files (in the subdirectory
   `soft.computecanada.ca/config`), use:
 
@@ -223,7 +235,7 @@ subdirectory to synchronize the module as well as the software:
 /etc/rsnt/rsnt-sync --what config
 ```
 
-- To synchronize any Python wheels, use:
+- To synchronize every Python wheels, use:
 
 ```
 /etc/rsnt/rsnt-sync --what custom --path python/wheelhouse
@@ -234,3 +246,4 @@ subdirectory to synchronize the module as well as the software:
 ```
 /etc/rsnt/rsnt-sync --what custom --path python/wheelhouse --software numpy --version 1.18
 ```
+

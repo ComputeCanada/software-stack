@@ -12,46 +12,47 @@ infrastructure. For detailed EasyBuild documentation, see:
 - [Overview of generic
   EasyBlocks](https://easybuild.readthedocs.io/en/latest/version-specific/generic_easyblocks.html#generic-easyblocks)
 
-### Contents
+## Contents
 
-- [Specificities of EasyBuild on Compute Canada](#specificities-of-easybuild-on-compute-canada)
-- [Searching for packages in EasyBuild](#searching-for-packages-in-easybuild)
-- [Toolchains](#toolchains)
-  - [Background](#background)
-  - [Compute Canada toolchains](#compute-canada-toolchains)
-    - [Toolchain hierarchy](#toolchain-hierarchy)
-    - [Core toolchains](#core-toolchains)
-    - [Compiler-only toolchains](#compiler-only-toolchains)
-    - [Compiler-only toolchains (Gentoo stack)](#compiler-only-toolchains-gentoo-stack)
-    - [Family toolchains](#family-toolchains)
-    - [Default Toolchains for StdEnv/2016.4](#default-toolchains-for-stdenv20164)
-    - [Default Toolchains for StdEnv/2018.3](#default-toolchains-for-stdenv20183)
-    - [Toolchains to use with StdEnv/2020](#toolchains-to-use-with-stdenv2020)
-- [Installing a package in EasyBuild](#installing-a-package-in-easybuild)
-  - [Installing for a different toolchain](#installing-for-a-different-different-toolchain)
-  - [Installing for a different architecture](#installing-for-a-different-architecture)
-  - [Installing for multiple architectures and toolchains](#installing-for-multiple-architectures-and-toolchains)
-  - [Installing for a different StdEnv](#installing-for-a-different-stdenv)
-  - [Creating or changing a recipe](#creating-or-changing-a-recipe)
-  - [Checksums in EasyConfig recipes](#checksums-in-easyconfig-recipes)
-- [Tips and tricks, troubleshooting](#tips-and-tricks-troubleshooting)
-  - [Rebuilding installed software](#rebuilding-installed-software)
-  - [Downloading source or binaries manually](#downloading-source-or-binaries-manually)
-  - [Fixing the loader and runpath](#fixing-the-loader-and-runpath)
-  - [Dependencies](#dependencies)
-  - [Debugging your build](#debugging-your-build)
-  - [Nix hardening](#nix-hardening)
-  - [Providing the source distribution](#providing-the-source-distribution)
-  - [Other topics to be covered in the future](#other-topics-to-be-covered-in-the-future)
-- [Contributing back to EasyBuild](#contributing-back-to-easybuild)
-- [Installing restricted software](#installing-restricted-software)
-  - [Different cases](#different-cases)
-  - [Informing users of restrictions at module load time](#informing-users-of-restrictions-at-module-load-time)
-  - [Installing the software](#installing-the-software)
-  - [Deploying POSIX group-restricted software with CVMFS](#deploying-posix-group-restricted-software-with-cvmfs)
-  - [Hiding POSIX group-restricted software on systems that don’t have them](#hiding-posix-group-restricted-software-on-systems-that-dont-have-them)
-  - [Existing POSIX groups to manage access to pieces of software](#existing-posix-groups-to-manage-access-to-pieces-of-software)
-- [FAQ](#faq)
+- [Installing with EasyBuild](#installing-with-easybuild)
+  * [Contents](#contents)
+  * [Specificities of EasyBuild on Compute Canada](#specificities-of-easybuild-on-compute-canada)
+  * [Searching for packages in EasyBuild](#searching-for-packages-in-easybuild)
+  * [Toolchains](#toolchains)
+    + [Background](#background)
+    + [Compute Canada toolchains](#compute-canada-toolchains)
+      - [Toolchain hierarchy](#toolchain-hierarchy)
+      - [Core toolchains](#core-toolchains)
+      - [Compiler-only toolchains](#compiler-only-toolchains)
+      - [Family toolchains](#family-toolchains)
+      - [Toolchains to use with StdEnv/2020](#toolchains-to-use-with-stdenv-2020)
+  * [Installing a package in EasyBuild](#installing-a-package-in-easybuild)
+    + [Installing for a different toolchain](#installing-for-a-different-toolchain)
+    + [Installing for a different architecture](#installing-for-a-different-architecture)
+    + [Installing for multiple architectures and toolchains](#installing-for-multiple-architectures-and-toolchains)
+    + [Installing for a different StdEnv](#installing-for-a-different-stdenv)
+    + [Creating or changing a recipe](#creating-or-changing-a-recipe)
+    + [Checksums in EasyConfig recipes](#checksums-in-easyconfig-recipes)
+  * [Tips and tricks, troubleshooting](#tips-and-tricks--troubleshooting)
+    + [Rebuilding installed software](#rebuilding-installed-software)
+    + [Downloading source or binaries manually](#downloading-source-or-binaries-manually)
+    + [Fixing the loader and runpath](#fixing-the-loader-and-runpath)
+    + [Dependencies](#dependencies)
+    + [Debugging your build](#debugging-your-build)
+    + [Providing the source distribution](#providing-the-source-distribution)
+    + [Other topics to be covered in the future](#other-topics-to-be-covered-in-the-future)
+  * [Contributing back to EasyBuild](#contributing-back-to-easybuild)
+  * [Installing restricted software](#installing-restricted-software)
+    + [Different cases](#different-cases)
+    + [Informing users of restrictions at module load time](#informing-users-of-restrictions-at-module-load-time)
+    + [Installing the software](#installing-the-software)
+    + [Deploying POSIX group-restricted software with CVMFS](#deploying-posix-group-restricted-software-with-cvmfs)
+    + [Hiding POSIX group-restricted software on systems that don’t have them](#hiding-posix-group-restricted-software-on-systems-that-don-t-have-them)
+    + [Existing POSIX groups to manage access to pieces of software](#existing-posix-groups-to-manage-access-to-pieces-of-software)
+  * [Installing datasets](#installing-datasets)
+    + [Deploying datasets with CVMFS](#deploying-datasets-with-cvmfs)
+  * [FAQ](#faq)
+
 
 ## Specificities of EasyBuild on Compute Canada
 
@@ -126,7 +127,7 @@ Please stick with one of the standard CC toolchains, unless you have a good
 reason not to. To get a complete up-to-date list of available toolchains, see
 the above instructions.
 
-Note that the `iomkl,2016.4.11` toolchain and its subtoolchains `iompi`,
+Note that the `iomkl,2020a` toolchain and its subtoolchains `iompi`,
 `iimkl`, and `iccifort` are the main toolchains that we use; its components are
 loaded by default when logging into the system.
 
@@ -143,9 +144,7 @@ Core toolchains are not dependent on a specific compiler:
 - `SYSTEM` in easyconfigs or `system,system` for `--try-toolchain`: For
   binary-only installations, and codes without architecture-dependent
   optimization.
-- `GCCcore,5.4.0`: For Nix, "Core" uses only components provided by Nix (GCC
-  5.4.0) without architecture-dependent optimization.
-- `GCCcore,9.3.0`: For the Gentoo based `StdEnv/2020` stack, this uses an
+- `GCCcore,9.3.0`: This uses an
   EasyBuild-provided GCC 9.3.0 with architecture-dependent optimization. It can
   be combined with MKL in the `gcccoremkl,2020a` toolchain. This toolchain is
   useful for codes that don't use MPI and are not typically compiled with the
@@ -153,14 +152,9 @@ Core toolchains are not dependent on a specific compiler:
 
 #### Compiler-only toolchains
 
-- iccifort: 2014.6, 2016.4, 2017.1, 2017.5, 2018.3, 2019.3
-- GCC: 4.8.5, 4.9.4, 5.4.0, 6.4.0, 7.3.0, 8.3.0, 9.1.0
-- PGI: 13.10, 16.9, 17.3, 19.4
-
-#### Compiler-only toolchains (Gentoo stack)
-
 - iccifort: 2020.1.217
-- GCC: 8.4.0, 9.3.0
+- GCC: 8.4.0, 9.3.0, 10.2.0
+- NVHPC: 20.7
 
 #### Family toolchains
 
@@ -175,39 +169,6 @@ MPI]]]**, for example:
 To better understand naming patterns for family toolchains, see the tables
 below.
 
-#### Default Toolchains for StdEnv/2016.4
-
-```
-|----------------------------------|------------------------|-------------------|-----------------|
-|                                  |          Intel         |        GCC        |    PGI          |
-|----------------------------------|------------------------|-------------------|-----------------|
-| Compiler only                    |     iccifort-2016.4    |     GCC-5.4.0     |    pgi-17.3     |
-| Compiler            + MKL        |        iimkl-2016.4    |    gmkl-2016.4    |                 |
-| Compiler + Open MPI              |        iompi-2016.4.11 |   gompi-2016.4.11 | pompi-2017.1.11 |
-| Compiler + Open MPI + MKL        |        iomkl-2016.4.11 |   gomkl-2016.4.11 | pomkl-2017.1.11 |
-| Compiler                  + Cuda | iccifortcuda-2016.4    | gcccuda-2016.4    |                 |
-| Compiler + Open MPI       + Cuda |       iompic-2016.4.11 |  gompic-2016.4.11 |                 |
-| Compiler            + MKL + Cuda |       iimklc-2016.4    |   gmklc-2016.4    |                 |
-| Compiler + Open MPI + MKL + Cuda |       iomklc-2016.4.11 |  gomklc-2016.4.11 |                 |
-|----------------------------------|------------------------|-------------------|-----------------|
-```
-
-#### Default Toolchains for StdEnv/2018.3
-
-```
-|----------------------------------|-----------------------------|------------------------|
-|                                  |            Intel            |          GCC           |
-|----------------------------------|-----------------------------|------------------------|
-| Compiler only                    |     iccifort-2018.3         |     GCC-7.3.0          |
-| Compiler            + MKL        |        iimkl-2018.3         |    gmkl-2018.3         |
-| Compiler + Open MPI              |        iompi-2018.3.312     |   gompi-2018.3.312     |
-| Compiler + Open MPI + MKL        |        iomkl-2018.3.312     |   gomkl-2018.3.312     |
-| Compiler                  + Cuda | iccifortcuda-2018.3.100     | gcccuda-2018.3.100     |
-| Compiler + Open MPI       + Cuda |       iompic-2018.3.312.100 |  gompic-2018.3.312.100 |
-| Compiler            + MKL + Cuda |       iimklc-2018.3.100     |   gmklc-2018.3.100     |
-| Compiler + Open MPI + MKL + Cuda |       iomklc-2018.3.312.100 |  gomklc-2018.3.312.100 |
-|----------------------------------|-----------------------------|------------------------|
-```
 
 #### Toolchains to use with StdEnv/2020
 ```
@@ -275,7 +236,7 @@ If the recipe you want to use already exists but uses the a different toolchain,
 you can sometimes install it using a single command:
 
 ```
-sudo -i -u ebuser eb HPL-2.2-intel-2017.01.eb --try-toolchain=iomkl,2016.4.11
+sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iomkl,2020a
 ```
 
 **Note:** The actual generated easyconfig will be saved into
@@ -311,18 +272,10 @@ parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolc
 
 ### Installing for a different StdEnv
 
-The `StdEnv/2016.4` and `StdEnv/2018.3` are built on top of Nix while the `StdEnv/2020` is built on top of Gentoo.
-In order for EasyBuild to choose the correct toolchains and underlying Nix or Gentoo, a suitable StdEnv needs
-to be loaded before invoking `eb`.  
-As of September 2020, on build-node the `StdEnv/2016.4` is still the default and good to compile software for 
-both `StdEnv/2016.4` and `StdEnv/2018.3`.
-
-So for building software for `StdEnv/2020`, the new StdEnv needs to be loaded first:
-
-```
-module load StdEnv/2020
-sudo -i -u ebuser eb <name of easyconfig file>
-```
+The `StdEnv/2020` is built on top of Gentoo.
+In order for EasyBuild to choose the correct toolchains and underlying Gentoo, a suitable StdEnv needs
+to be loaded before invoking `eb`. 
+As of March 15th, 2020, on build-node, `StdEnv/2020` is the default environment. 
 
 ### Creating or changing a recipe
 
@@ -338,70 +291,118 @@ git checkout computecanada-main
 Then you `cd` to the package, e.g.:
 
 ```
-cd easybuild/easyconfigs/g/GROMACS
+cd easybuild/easyconfigs/i/igraph
 ```
 
 And create a new easyconfig to make modifications in:
 
 ```
-cp GROMACS-2016-foss-2016b-hybrid.eb GROMACS-2016-iomkl-2016.4.11.eb
+cp igraph-0.8.2-foss-2020a.eb igraph-0.8.2-gcccoremkl-2020a.eb
 ```
 
-The change from `foss-2016b` to `iomkl-2016.4.11` is a toolchain change. We do
+The change from `foss-2020a` to `gcccoremkl-2020a` is a toolchain change. We do
 not expose the toolchains to users but use them internally to denote compiler,
 MPI and linear algebra combinations.
 
-File `GROMACS-2016-iomkl-2016.4.11.eb` is then edited as follows:
+File `igraph-0.8.2-gcccoremkl-2020a.eb` is then edited as follows:
 
 ```
-##
-# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
-#
-# Copyright:: Copyright 2012-2016 University of Luxembourg / LCSB, Cyprus Institute / CaSToRC,
-#                                 Ghent University / The Francis Crick Institute
-# Authors::
-# * Wiktor Jurkowski <wiktor.jurkowski@gmail.com>
-# * Fotis Georgatos <fotis@cern.ch>
-# * George Tsouloupas <g.tsouloupas@cyi.ac.cy>
-# * Kenneth Hoste <kenneth.hoste@ugent.be>
-# * Adam Huffman <adam.huffman@crick.ac.uk>
-# License::   MIT/GPL
-##
+easyblock = 'ConfigureMake'
 
-name = 'GROMACS'
-version = '2016'
+name = 'igraph'
+version = '0.8.2'
 
-homepage = 'http://www.gromacs.org'
-description = """GROMACS is a versatile package to perform molecular dynamics,
- i.e. simulate the Newtonian equations of motion for systems with hundreds to millions of particles."""
+homepage = 'https://igraph.org'
+description = """igraph is a collection of network analysis tools with the emphasis on
+efficiency, portability and ease of use. igraph is open source and free. igraph can be
+programmed in R, Python and C/C++."""
 
-toolchain = {'name': 'iomkl', 'version': '2016.4.11'}
-toolchainopts = {'openmp': True, 'usempi': True}
-source_urls = ['ftp://ftp.gromacs.org/pub/gromacs/']
-sources = [SOURCELOWER_TAR_GZ]
+toolchain = {'name': 'gcccoremkl', 'version': '2020a'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
+sources = ['%(name)s-%(version)s.tar.gz']
+checksums = ['718a471e7b8cbf02e3e8006153b7be6a22f85bb804283763a0016280e8a60e95']
+
 builddependencies = [
-   ('Boost', '1.62.0'),
+    ('Autotools', '20180311'),
+    ('pkg-config', '0.29.2'),
 ]
 
-moduleclass = 'bio'
+dependencies = [
+    ('GLPK', '4.65'),
+    ('libxml2', '2.9.10'),
+    ('zlib', '1.2.11'),
+]
+
+preconfigopts = "autoreconf -i && "
+# Remove hardcoded links to BLAS/LAPACK
+preconfigopts += "sed -i 's/-lblas/$LIBBLAS/' configure && "
+preconfigopts += "sed -i 's/-llapack/$LIBLAPACK/' configure && "
+
+configopts = "--with-external-blas --with-external-lapack --with-external-glpk"
+
+multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
+multi_deps_extensions_only = True
+
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+
+sanity_check_paths = {
+    'files': ['lib/libigraph.%s' % x for x in [SHLIB_EXT, 'la', 'a']] + ['lib/pkgconfig/igraph.pc'] +
+             ['include/igraph/igraph%s.h' % x for x in ['', '_blas', '_constants', '_lapack', '_types', '_version']],
+    'dirs': [],
+}
 ```
 
-Four changes were made from the original which can be found
-[here](http://github.com/computecanada/easybuild-easyconfigs/tree/computecanada-main/easybuild/easyconfigs/g/GROMACS/GROMACS-2016-foss-2016b-hybrid.eb):
+Two changes were made from the original which can be found
+[here](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-main/easybuild/easyconfigs/i/igraph/igraph-0.8.2-foss-2020a.eb):
 
-- Eliminating `versionsuffix`. In general we decided not to use version suffixes
-  (such as `2016-hybrid`), using plain versions instead. If suffixes cannot be
-  avoided we can make them part of the name.
-- Changing the toolchain to `iomkl,2016.4.11`.
-- Remove the CMake `builddependency` (already provided by Nix).
-- Updating the Boost dependency from 1.61.0 to 1.62.0 to match what is already
-  installed (use the `module spider boost` command to find out).
+- Changing the toolchain to `gcccoremkl,2020a`. It is quite frequent that the upstream versions
+of EasyBuild recipes use an over-complete toolchain, i.e. a toolchain which includes dependencies that
+are not needed. In this example, the upstream recipe uses "foss" which includes OpenMPI, but igraph does
+not use OpenMPI. We "downgrade" the toolchain to gcccoremkl, which uses GCC and MKL.
+- Adding the section for Python extensions: 
+```
+multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
+multi_deps_extensions_only = True
 
-The GROMACS package can then be test-built and tested using this syntax:
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+``` 
+When it makes sense, we try to install the python bindings alongside the main
+code. In this case, we install the `python-igraph` package. Whenever possible, we
+also try to install it for multiple versions of python. This is done with the 
+`multi_deps` option. Finally, the `EBPYTHONPREFIXES` environment variable is used by
+our python configuration to find packages compatible with the version of python that
+is being used.
+
 
 ```
-eb GROMACS-2016-iomkl-2016.4.11.eb
-module load intel/2016.4 openmpi/2.1.1 gromacs/2016
+eb igraph-0.8.2-gcccoremkl-2020a.eb
+module load igraph/0.8.2
 ```
 
 Please refer to the [Checksums in EasyConfig
@@ -412,7 +413,7 @@ This uses the file that you just changed in the current directory. Once you are
 satisfied with the local build, you can then add the file to the git repository:
 
 ```
-git add GROMACS-2016-iomkl-2016.4.11.eb
+git add igraph-0.8.2-gcccoremkl-2020a.eb
 git pull origin computecanada-main
 git commit -m "commit message goes here"
 git push origin computecanada-main
@@ -423,7 +424,7 @@ the user `ebuser`; the first command syncs the channel from GitHub:
 
 ```
 sudo -iu ebuser eb-pull-cc
-sudo -iu ebuser eb GROMACS-2016-iomkl-2016.4.11.eb
+sudo -iu ebuser eb igraph-0.8.2-gcccoremkl-2020a.eb
 ```
 
 Note that if you installed the package in your own account, that version will
@@ -505,7 +506,7 @@ Once the source is there, you will be able to install the package.
 ### Fixing the loader and runpath
 
 As a design decision, we are typically not setting `LD_LIBRARY_PATH` in software
-modules. Instead, our compilers ensure that the correct Nix loader ("ELF
+modules. Instead, our compilers ensure that the correct Gentoo loader ("ELF
 interpreter") is used by the binaries and therefore locates appropriate OS
 libraries. This works well for things that we compile ourselves. However, for
 software that is installed in a binary form, and for some compiled software, it
@@ -523,7 +524,7 @@ setrpaths.sh --path <path>
 *runpath* to setting the loader, its historical name `setrpath.sh` remained
 the same for backward compatibility reasons.
 
-If the interpreter used by the binary is already our local Nix interpreter, the
+If the interpreter used by the binary is already our local Gentoo interpreter, the
 script will not patch anything as it is supposed to be working correctly from
 the compilation step. Sometimes, however, the binary still needs to be patched,
 and a special option `--any_interpreter` can force it:
@@ -597,11 +598,7 @@ step where the failure occurred, and then attempt to repeat that particular step
 
 To get a clear understanding of where the error occurs, it is often useful to
 run the non-parallel build, so that errors are given in the output log file in
-the correct order. To do this, add to the `.eb` file the line:
-
-```
-maxparallel = 1
-```
+the correct order. To do this, add the option `--sequential` to your `eb` command. 
 
 Once you identify the line in the build process that causes the error, you can
 have `eb` dump the environment used during the building, source that
@@ -609,40 +606,27 @@ environment, and then navigate to the build directory (included in each `eb`
 build output). For example:
 
 ```
-eb NAMD-2.13b2-iimkl-2016.4-multicore.eb
+eb igraph-0.8.2-gcccoremkl-2020a.eb
 (... some error happens ...)
-eb NAMD-2.13b2-iimkl-2016.4-multicore.eb --dump-env-script
+eb igraph-0.8.2-gcccoremkl-2020a.eb --dump-env-script
 module --force purge
-module load nixpkgs/16.09
-source NAMD-2.13b2-iimkl-2016.4-multicore.env
-cd /dev/shm/$USER/avx2/NAMD/2.13b2/iimkl-2016.4-multicore/NAMD_2.13b2_Source/
+module load StdEnv/2020
+source igraph-0.8.2-gcccoremkl-2020a.env
+cd /tmp/$USER/avx2/igraph/0.8.2/gcccoremkl-2020a/igraph-0.8.2/
 ```
 
 At this point you run the precise build step command which failed.
 
-### Nix hardening
-
-By default, Nix does hardening of ELF binaries. We have actually removed most of
-it for things compiled outside of `nix-env` except for the `-z,relro -z,now`
-settings, which correspond to [Full
-RELRO](https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro).
-
-In rare cases, when lazy binding (symbol resolution) is used (see, for example,
-[Ticket #044066](https://support.computecanada.ca/otrs/index.pl?Action=AgentTicketZoom;TicketID=44131#246597)
-(CC staff link), Full RELRO can prevent shared libraries from being loaded.
-Switching to Partial RELRO, by disabling `-z,now` will resolve the issue. This
-can be accomplished by setting an environment variable at the linking stage like
-so: `export hardeningDisable=bindnow`.
-
-We are currently considering removing `-z, now` in Nix and therefore switching
-to Partial RELRO. Note that Partial RELRO is already the default in binutils
-since 2.27 (we use 2.28).
-
-To summarize:
-
-- Full RELRO -> `-z,relro -z,now` (current Nix mode)
-- Partial RELRO -> `-z,relro` (default in recent binutils)
-- To switch from Full to Partial right now use `export hardeningDisable=bindnow`
+To figure out which commands were run by EasyBuild, you can use `grep` to find
+instances of `run.py` in the log file: 
+```
+grep run.py /tmp/eb-gqqs_1w0/easybuild-wszpn04e.log
+== 2021-03-15 18:45:09,532 run.py:222 INFO running cmd: type module
+== 2021-03-15 18:45:26,032 run.py:222 INFO running cmd: tar xzf /home/mboisson/.local/easybuild/sources/i/igraph/igraph-0.8.2.tar.gz
+== 2021-03-15 18:45:29,915 run.py:222 INFO running cmd: /home/mboisson/.local/easybuild/sources/generic/eb_v4.3.3/ConfigureMake/config.guess
+== 2021-03-15 18:45:29,960 run.py:538 INFO cmd "/home/mboisson/.local/easybuild/sources/generic/eb_v4.3.3/ConfigureMake/config.guess" exited with exit code 0 and output:
+== 2021-03-15 18:45:29,961 run.py:222 INFO running cmd: autoreconf -i && sed -i 's/-lblas/$LIBBLAS/' configure && sed -i 's/-llapack/$LIBLAPACK/' configure &&  ./configure --prefix=/home/mboisson/.local/easybuild/software/2020/avx2/Core/igraph/0.8.2  --build=x86_64-pc-linux-gnu  --host=x86_64-pc-linux-gnu --with-external-blas --with-external-lapack --with-external-glpk
+``` 
 
 ### Providing the source distribution
 
@@ -888,28 +872,7 @@ membership can be changed through the CCDB.
 
 ### Deploying POSIX group-restricted software with CVMFS
 
-**See also:** [Deploying software with CVMFS](cvmfs.md)
-
-Because POSIX group restricted software have binaries in the restricted
-repository, and modules in the public repository, you must start two
-transactions. One to `dev` or `prod` repository for the module, and one to the
-restricted repository. Here is an example:
-
-```
-sudo su - libuser
-
-sudo /etc/rsnt/start_transaction <dev|prod>
-sudo /etc/rsnt/start_transaction restricted
-
-/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
-
-sudo /etc/rsnt/publish_transaction restricted
-sudo /etc/rsnt/publish_transaction <dev|prod>
-
-exit
-```
-
-Note that changes will propagate to the clusters within 30 minutes.
+**See:** [Deploying to the restricted repository with CVMFS](cvmfs.md#deploying-to-the-restricted-repository-with-cvmfs)
 
 ### Hiding POSIX group-restricted software on systems that don’t have them
 
@@ -928,6 +891,23 @@ Existing POSIX groups to manage access to some software (CC staff links):
 - [soft_dl_poly4](https://ccdb.computecanada.ca/services/soft_dl_poly4)
 - [soft_orca](https://ccdb.computecanada.ca/services/soft_orca)
 - [soft_gaussian](https://ccdb.computecanada.ca/services/soft_gaussian)
+
+## Installing datasets
+In rare occasions, a piece of software requires large datasets to be installed. If these are larger than 50GB or
+if they contain many files larger than 1GB, they should be installed in the `data.rsnt` repository. Interproscan is
+such an example. Part of the software is a dataset named `panther`. It can be installed as such: 
+```
+eb panther-14.1-system.eb --installpath-software=/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/
+``` 
+This will install the data inside of `/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/`, while the module will
+be installed under `/cvmfs/soft.computecanada.ca/easybuild/modules`. Synchronizing to CVMFS is then performed in the same way
+as for restricted software, by starting transactions on two different repositories. 
+
+### Deploying datasets with CVMFS
+
+**See:** [Deploying datasets with CVMFS](cvmfs.md#deploying-datasets-with-cvmfs)
+
+
 
 ## FAQ
 
