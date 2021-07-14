@@ -59,18 +59,40 @@ configuration options, you can rely on PyPI, but you can not use `--find-links` 
 ## Different solutions and when they apply
 ### `--find-links` or `--extra-index-url` 
 These two options of `pip` are used to add *extra* locations for `pip` to find packages. These locations are in addition to PyPI. It is very important to note that 
-they are not *prefered* to PyPI. Based on the [number](https://github.com/pypa/pip/issues/8606) of [threads](https://github.com/pypa/pip/issues/5045) [about](https://stackoverflow.com/questions/67253141/python-pip-priority-order-with-index-url-and-extra-index-url) [it](https://www.gitmemory.com/issue/pypa/pip/8606/788258060), this is a common misconception. The Pip developers are adamant that when multiple indexes are provided, they are (treated equally)[https://github.com/pypa/pip/issues/8606#issuecomment-665554122]. This means that if the same package, with the same version, is found in multiple indexes, `pip` is free to install whichever: the behavior is undefined, and it can change from one version of `pip` to the next. 
+they are not *prefered* to PyPI. Based on the [number](https://github.com/pypa/pip/issues/8606) of [threads](https://github.com/pypa/pip/issues/5045) [about](https://stackoverflow.com/questions/67253141/python-pip-priority-order-with-index-url-and-extra-index-url) [it](https://www.gitmemory.com/issue/pypa/pip/8606/788258060), this is a common misconception. The Pip developers are adamant that when multiple indexes are provided, they are [treated equally](https://github.com/pypa/pip/issues/8606#issuecomment-665554122). This means that if the same package, with the same version, is found in multiple indexes, `pip` is free to install whichever: the behavior is undefined, and it can change from one version of `pip` to the next. 
 
 These two options are basically useful when you have a *disjoint* set of Python packages from PyPI, not an *overlapping* set. This comes with a security issue: you may well have a disjoint set on day 1, but somebody in the future can simply upload a Python package with the same name and version as your private package, and it may be installed in your infrastructure without you even noticing it. 
 
-For this reason, if you opt to using these two options, you should *also* use `--index-url` to prevent `pip` from looking directly on PyPI. You can then configure either a (devpi)[https://www.devpi.net/] or a (simpleindex)[https://github.com/uranusjr/simpleindex] server, and configure them to redirect to PyPI *except* for the packages which you wish to control. 
+For this reason, if you opt to using these two options, you should *also* use `--index-url` to prevent `pip` from looking directly on PyPI. You can then configure either a [devpi](https://www.devpi.net/) or a [simpleindex](https://github.com/uranusjr/simpleindex) server, and configure them to redirect to PyPI *except* for the packages which you wish to control. 
 
 ### `--index-url` or `--no-index` 
-These two options are used to either replace the default PyPI index by your own (using the aforementionned `devpi` or `simpleindex` solutions), or to completely disable the index (and then only locate packages using local paths). These options are the only recommendable options if security is your absolute concern. 
+These two options are used to either replace the default PyPI index by your own (using the aforementionned `devpi` or `simpleindex` solutions), or to completely disable the index (and then only locate packages using local paths). These options are the only recommendable options if *security* is your absolute concern. You can then populate a carefully curated list of packages which you allow. 
 
 ### Build tags and local versions
+While configuring indexes can not be relied upon to prioritize between two identical packages, Python offers two mechanisms which *can* be used for such purpose. Those are [build tags](https://packaging.python.org/specifications/binary-distribution-format/#file-name-convention) and [local version identifiers](https://www.python.org/dev/peps/pep-0440/#local-version-identifiers). These options were pointed to us in [this issue](https://github.com/pypa/pip/issues/10156), by [Pradyun Gedam](https://github.com/pradyunsg). 
+
+Build tags can be simply added to the name of a wheel file after the version number: 
+```
+{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl
+``` 
+If such a tag is found, it is used as a tie breaker between two otherwise identical packages. 
+
+Local version identifiers are a bit trickier to change, because the metadata provided within the wheel needs to match the wheel name. A wheel file with a 
+local version identifier would be named
+```
+{distribution}-{version}+{local version identifier}-{python tag}-{abi tag}-{platform tag}.whl
+``` 
+and the version would be considered as `{version}+{local version identifier}` in the metadata. If such a local version identifier is found, it is also used as a tie breaker between otherwise identical packages. In both cases, issuing `pip install {distribution}=={version}` will accept packages with or without either build tags or local version identifiers, but it will *prefer* install, in this order: 
+1. {version}+{local version identifier}
+2. {version}-{build tag}
+3. {version}
+
+Build tags must start with a digit, while local version identifiers do not have to. In addition, when listing installed packages with `pip list` or `pip freeze`, build tags will not be displayed, while local version identifiers will be displayed. 
 
 
 ## What we ended up doing
-
-
+In our case, security is not our concern. There is a clear divide between securing our infrastructure (what is run with elevated privileges), and the code that
+users our infrastructure will run. Users run code without any privilege, but we do not limit the codes they can run. For better or for worst, most users already
+rely on PyPI heavily to install their packages. Our concern is only to provide our users with packages that are optimized for our infrastructure and that are known
+to be compatible with the libraries we provide. We therefore decided to go with local version specifiers. That meant we had to update our build scripts to inject
+this identifier into the wheels we build. This was however not very complicated to implement with a [simple shell script](https://github.com/ComputeCanada/wheels_builder/pull/29/files).
