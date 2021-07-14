@@ -1,4 +1,4 @@
-# pip: Which version is it anyway ? 
+# pip: Which version is it installing anyway ? 
 A blog post about meandering through the way `pip` decides which package to install
 
 Author: Maxime Boissonneault (Compute Canada, Calcul Québec, Université Laval)
