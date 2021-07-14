@@ -63,7 +63,7 @@ they are not *prefered* to PyPI. Based on the [number](https://github.com/pypa/p
 
 These two options are basically useful when you have a *disjoint* set of Python packages from PyPI, not an *overlapping* set. This comes with a security issue: you may well have a disjoint set on day 1, but somebody in the future can simply upload a Python package with the same name and version as your private package, and it may be installed in your infrastructure without you even noticing it. 
 
-For this reason, if you opt to using these two options, you should *also* use `--index-url` to prevent `pip` from looking directly on PyPI. You can then configure either a [devpi](https://www.devpi.net/) or a [simpleindex](https://github.com/uranusjr/simpleindex) server, and configure them to redirect to PyPI *except* for the packages which you wish to control. 
+For this reason, if you opt to using these two options in order to provide *private packages*, you should *also* use `--index-url` to prevent `pip` from looking directly on PyPI. You can then configure either a [devpi](https://www.devpi.net/) or a [simpleindex](https://github.com/uranusjr/simpleindex) server, and configure them to redirect to PyPI *except* for the packages which you wish to control. 
 
 ### `--index-url` or `--no-index` 
 These two options are used to either replace the default PyPI index by your own (using the aforementionned `devpi` or `simpleindex` solutions), or to completely disable the index (and then only locate packages using local paths). These options are the only recommendable options if *security* is your absolute concern. You can then populate a carefully curated list of packages which you allow. 
@@ -87,8 +87,9 @@ and the version would be considered as `{version}+{local version identifier}` in
 2. {version}-{build tag}
 3. {version}
 
-Build tags must start with a digit, while local version identifiers do not have to. In addition, when listing installed packages with `pip list` or `pip freeze`, build tags will not be displayed, while local version identifiers will be displayed. 
+Note that if one does not require an explicit version when installing the package, and if a more recent version of the package is uploaded on PyPI, `pip` will still prefer the more recent version. 
 
+Build tags must start with a digit, while local version identifiers do not have to. In addition, when listing installed packages with `pip list` or `pip freeze`, build tags will not be displayed, while local version identifiers will be displayed. 
 
 ## What we ended up doing
 In our case, security is not our concern. There is a clear divide between securing our infrastructure (what is run with elevated privileges), and the code that
@@ -96,3 +97,7 @@ users our infrastructure will run. Users run code without any privilege, but we 
 rely on PyPI heavily to install their packages. Our concern is only to provide our users with packages that are optimized for our infrastructure and that are known
 to be compatible with the libraries we provide. We therefore decided to go with local version specifiers. That meant we had to update our build scripts to inject
 this identifier into the wheels we build. This was however not very complicated to implement with a [simple shell script](https://github.com/ComputeCanada/wheels_builder/pull/29/files).
+
+Since the wheels we provide to our users already rely on PyPI, we are not concerned about blocking or filtering packages offered by PyPI, and we therefore still use `--find-links`, except we are not relying on it for prioritizing our own wheels: that is done by the local version specifiers. 
+
+As of July 2021, we have yet to repackage all of our existing python wheels to add local version specifiers, since this will be a long endeavour, but the newly compiled ones automatically include it. We are therefore still relying on a `pip<21` constraint, but we should be able to lift that constraint in the future. 
