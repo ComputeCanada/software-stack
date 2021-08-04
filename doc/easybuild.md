@@ -664,19 +664,19 @@ git grep buildininstalldir
 
 In order to contribute back to EasyBuild, what must be done is called a pull
 request. Pull requests are to be done against the `develop` branch of the
-HPCUgent repositories. In order to be able to do so, you first need to retrieve
+easybuilders repositories. In order to be able to do so, you first need to retrieve
 that branch. This is done by running the following from your local repository.
 We are assuming here that you want to create a pull request on the
 `easybuild-easyconfigs` repository. The same would apply for
 `easybuild-easyblocks` or `easybuild-framework`.
 
 ```
-git remote add upstream git@github.com:hpcugent/easybuild-easyconfigs.git
+git remote add upstream git@github.com:easybuilders/easybuild-easyconfigs.git
 git fetch upstream develop
 ```
 
 The first command adds a second remote repository to your local repository. This
-will allow you to pull changes from the HPCUgent version as well as the Compute
+will allow you to pull changes from the easybuilders version as well as the Compute
 Canada version of the repository. The second command retrieves the commits from
 the upstream repository, without merging them with your local
 version.
@@ -728,7 +728,7 @@ If you want to perform an installation as `ebuser`.
 Once you are ready to create the pull request, you will go on GitHub to this
 page: `https://github.com/ComputeCanada/easybuild-easyconfigs/tree/mybranch`.
 
-And click on "New pull request". On the left side (`hpcugent` side), make sure
+And click on "New pull request". On the left side (`easybuilders` side), make sure
 you choose `base:develop` for the branch. On the right side (`computecanada`
 side), make sure you select your custom branch.
 
@@ -738,7 +738,7 @@ create the pull request.
 
 From this point on, every time you push the `mybranch` branch, the new commit
 will be added to the same pull request. This will be the case until the pull
-request is merged on `hpcugent` side. Note that the EasyBuild developers are
+request is merged on `easybuilders` side. Note that the EasyBuild developers are
 likely to request various changes, including coding style changes. They also
 will not merge the request unless their automated test suite can run on it. This
 means that the easyconfig must use one of their main toolchains.
