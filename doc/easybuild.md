@@ -897,7 +897,7 @@ In rare occasions, a piece of software requires large datasets to be installed. 
 if they contain many files larger than 1GB, they should be installed in the `data.rsnt` repository. Interproscan is
 such an example. Part of the software is a dataset named `panther`. It can be installed as such: 
 ```
-eb panther-14.1-system.eb --installpath-software=/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/
+eb panther-14.1-system.eb --installpath-software=/cvmfs/data.rsnt.computecanada.ca/content/easybuild/data/
 ``` 
 This will install the data inside of `/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/`, while the module will
 be installed under `/cvmfs/soft.computecanada.ca/easybuild/modules`. Synchronizing to CVMFS is then performed in the same way
