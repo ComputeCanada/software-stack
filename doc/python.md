@@ -117,12 +117,7 @@ After having created a wheel, and before adding it to CVMFS, you will have to ad
 manipulate_wheels.py -i --inplace -w <package>.whl
 ```
 
-To get your wheel into CVMFS, you will want to either:
-
-* Manually copy the wheel to each architecture that is applicable
-* Use the [cp_wheels.sh](https://github.com/ComputeCanada/wheels_builder/blob/main/cp_wheels.sh) script to automatically determine the correct path(s).
-
-(The later is the prefered route.)
+To get your wheel into CVMFS, use the [cp_wheels.sh](https://github.com/ComputeCanada/wheels_builder/blob/main/cp_wheels.sh) script. Calling it without parameters will handle the wheels in the current directory. It has many advantages compared to copying manually, namely: it will automatically determine the correct destinations in CVMFS, and it will catch some mistakes, such as forgetting to add the local version identifier.
 
 Once the wheel is copied, you can sync to CVMFS, using the `--what custom-python` option of `rsnt-sync`. See the [CVMFS documentation](cvmfs.md).
 
