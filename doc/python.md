@@ -111,6 +111,12 @@ and per architecture. They are located here:
                    └── avx512           Gentoo AVX512
 ```
 
+After having created a wheel, and before adding it to CVMFS, you will have to add the `computecanada` local version identifier to it, by using [manipulate_wheels.py](https://github.com/ComputeCanada/wheels_builder/blob/main/manipulate_wheels.py):
+
+```
+manipulate_wheels.py -i --inplace -w <package>.whl
+```
+
 To get your wheel into CVMFS, you will want to either:
 
 * Manually copy the wheel to each architecture that is applicable
