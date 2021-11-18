@@ -90,7 +90,8 @@ For example, `eb -S GROMACS` or `eb -S gromacs` gives a list of easyconfig
 
 Toolchains are a core concept within EasyBuild. A toolchain is a set of
 recipes/modules that includes compilers (GCC, Intel, PGI), MPI implementations
-(such as OpenMPI), Cuda,  and core mathematical libraries such as MKL.
+(such as OpenMPI), Cuda,  and core mathematical libraries such as MKL and the
+FlexiBLAS wrapper library.
 Toolchains are layered, with more complex toolchains being built out of a
 combination of sub-toolchains. Toolchains are installed as modules, but most of
 them are hidden by default. You can get a list of toolchains using:
@@ -127,9 +128,11 @@ Please stick with one of the standard CC toolchains, unless you have a good
 reason not to. To get a complete up-to-date list of available toolchains, see
 the above instructions.
 
-Note that the `iomkl,2020a` toolchain and its subtoolchains `iompi`,
-`iimkl`, and `iccifort` are the main toolchains that we use; its components are
-loaded by default when logging into the system.
+Note that the `iofbf,2020a` toolchain and its subtoolchains `iofb`, `iompi`,
+`iccifortflexiblas`, and `iccifort` are the main toolchains that we use; its components
+are loaded by default when logging into the system. The FlexiBLAS-based toolchains
+are preferred to MKL-based toolchains for new installations, since they allow the use
+of other libraries than MKL (BLIS or OpenBLAS) on non-Intel systems.
 
 #### Toolchain hierarchy
 
@@ -146,25 +149,27 @@ Core toolchains are not dependent on a specific compiler:
   optimization.
 - `GCCcore,9.3.0`: This uses an
   EasyBuild-provided GCC 9.3.0 with architecture-dependent optimization. It can
-  be combined with MKL in the `gcccoremkl,2020a` toolchain. This toolchain is
+  be combined with FlexiBLAS in the `gcccoreflexiblas,2020a` toolchain. This toolchain is
   useful for codes that don't use MPI and are not typically compiled with the
   Intel compiler as well, such as R, Julia, Python, and various base libraries.
 
 #### Compiler-only toolchains
 
-- iccifort: 2020.1.217
-- GCC: 8.4.0, 9.3.0, 10.2.0
+- iccifort: 2020.1.217, 2021.2.0
+- GCC: 8.4.0, 9.3.0, 10.3.0
 - NVHPC: 20.7
 
 #### Family toolchains
 
-Family toolchains are a combination of **Compiler [+ MKL [+ CUDA [+ Open
+Family toolchains are a combination of **Compiler [+ MKL/FlexiBLAS [+ CUDA [+ Open
 MPI]]]**, for example:
 
-- GCC: `GCC`, `gmkl`, `gompi`, `gomkl`, `gcccuda`, `gompic`, `gmklc`, `gomklc`
-- Intel: `iccifort`, `iimkl`, `iompi`, `iomkl`, `iccifortcuda`, `iompic`,
-  `iimklc`, `iomklc`
+- GCC: `GCC`, `gmkl`, `gccflexiblas`, `gompi`, `gomkl`, `gofb`, `gofbf`,
+  `gcccuda`, `gompic`, `gmklc`, `gccflexiblascuda`, `gomklc`, `gofbc`
+- Intel: `iccifort`, `iimkl`, `iccifortflexiblas`, `iompi`, `iomkl`, `iofb`, `iofbf`,
+  `iccifortcuda`, `iompic`, `iimklc`, `iccifortflexiblascuda`, `iomklc`, `iofbc`
 - PGI: `pgi`, `pomkl`, `pompi`
+- NVHPC: `NVHPC`, `nvompi`, `nvhpccuda`, `nvompic`
 
 To better understand naming patterns for family toolchains, see the tables
 below.
@@ -240,7 +245,7 @@ If the recipe you want to use already exists but uses the a different toolchain,
 you can sometimes install it using a single command:
 
 ```
-sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iomkl,2020a
+sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iofb,2020a
 ```
 
 **Note:** The actual generated easyconfig will be saved into
@@ -301,14 +306,14 @@ cd easybuild/easyconfigs/i/igraph
 And create a new easyconfig to make modifications in:
 
 ```
-cp igraph-0.8.2-foss-2020a.eb igraph-0.8.2-gcccoremkl-2020a.eb
+cp igraph-0.8.2-foss-2020a.eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
 ```
 
-The change from `foss-2020a` to `gcccoremkl-2020a` is a toolchain change. We do
+The change from `foss-2020a` to `gcccoreflexiblas-2020a` is a toolchain change. We do
 not expose the toolchains to users but use them internally to denote compiler,
 MPI and linear algebra combinations.
 
-File `igraph-0.8.2-gcccoremkl-2020a.eb` is then edited as follows:
+File `igraph-0.8.2-gcccoreflexiblas-2020a.eb` is then edited as follows:
 
 ```
 easyblock = 'ConfigureMake'
@@ -321,7 +326,7 @@ description = """igraph is a collection of network analysis tools with the empha
 efficiency, portability and ease of use. igraph is open source and free. igraph can be
 programmed in R, Python and C/C++."""
 
-toolchain = {'name': 'gcccoremkl', 'version': '2020a'}
+toolchain = {'name': 'gcccoreflexiblas', 'version': '2020a'}
 toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
@@ -373,10 +378,10 @@ sanity_check_paths = {
 Two changes were made from the original which can be found
 [here](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-main/easybuild/easyconfigs/i/igraph/igraph-0.8.2-foss-2020a.eb):
 
-- Changing the toolchain to `gcccoremkl,2020a`. It is quite frequent that the upstream versions
+- Changing the toolchain to `gcccoreflexiblas,2020a`. It is quite frequent that the upstream versions
 of EasyBuild recipes use an over-complete toolchain, i.e. a toolchain which includes dependencies that
 are not needed. In this example, the upstream recipe uses "foss" which includes OpenMPI, but igraph does
-not use OpenMPI. We "downgrade" the toolchain to gcccoremkl, which uses GCC and MKL.
+not use OpenMPI. We "downgrade" the toolchain to gcccoreflexiblas, which uses GCC and FlexiBLAS.
 - Adding the section for Python extensions: 
 ```
 multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
@@ -405,7 +410,7 @@ is being used.
 
 
 ```
-eb igraph-0.8.2-gcccoremkl-2020a.eb
+eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
 module load igraph/0.8.2
 ```
 
@@ -417,7 +422,7 @@ This uses the file that you just changed in the current directory. Once you are
 satisfied with the local build, you can then add the file to the git repository:
 
 ```
-git add igraph-0.8.2-gcccoremkl-2020a.eb
+git add igraph-0.8.2-gcccoreflexiblas-2020a.eb
 git pull origin computecanada-main
 git commit -m "commit message goes here"
 git push origin computecanada-main
@@ -428,7 +433,7 @@ the user `ebuser`; the first command syncs the channel from GitHub:
 
 ```
 sudo -iu ebuser eb-pull-cc
-sudo -iu ebuser eb igraph-0.8.2-gcccoremkl-2020a.eb
+sudo -iu ebuser eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
 ```
 
 Note that if you installed the package in your own account, that version will
@@ -610,13 +615,13 @@ environment, and then navigate to the build directory (included in each `eb`
 build output). For example:
 
 ```
-eb igraph-0.8.2-gcccoremkl-2020a.eb
+eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
 (... some error happens ...)
-eb igraph-0.8.2-gcccoremkl-2020a.eb --dump-env-script
+eb igraph-0.8.2-gcccoreflexiblas-2020a.eb --dump-env-script
 module --force purge
 module load StdEnv/2020
-source igraph-0.8.2-gcccoremkl-2020a.env
-cd /tmp/$USER/avx2/igraph/0.8.2/gcccoremkl-2020a/igraph-0.8.2/
+source igraph-0.8.2-gcccoreflexiblas-2020a.env
+cd /tmp/$USER/avx2/igraph/0.8.2/gcccoreflexiblas-2020a/igraph-0.8.2/
 ```
 
 At this point you run the precise build step command which failed.
