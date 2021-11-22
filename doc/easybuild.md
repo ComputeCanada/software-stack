@@ -177,39 +177,47 @@ below.
 
 #### Toolchains to use with StdEnv/2020
 ```
-|-----------------------------------------|-------------------------|----------------------|
-| Core-Level; Comp.Can. ; mostly upstream |          Intel          |        GCC           |
-|-----------------------------------------|-------------------------|----------------------|
-| Compiler (arch-independent Core)        |            n/a          |       SYSTEM         |
-| Compiler (arch-dependent Core)          |            n/a          |      GCCcore-9.3.0   |
-| Compiler (a-d Core) + MKL               |            n/a          |   gcccoremkl-2020a   |
-| Compiler (a-d Core) + FlexiBLAS         |            n/a          |gcccoreflexiblas-2020a|
-| Compiler (a-d Core)       + Cuda        |            n/a          |  gcccorecuda-2020a   |
-|-----------------------------------------|-------------------------|----------------------|
-| Compiler only                           |     iccifort-2020.1.217 |       GCC-9.3.0      |
-| Compiler             + MKL              |        iimkl-2020a      |      gmkl-2020a      |
-| Compiler             + FlexiBLAS        | iccifortflexiblas-2020a | gccflexiblas-2020a   |
-| Compiler + Open MPI                     |        iompi-2020a      |     gompi-2020a      |
-| Compiler + Open MPI  + MKL              |        iomkl-2020a      |     gomkl-2020a      |
-| Compiler + Open MPI  + FlexiBLAS (FB)   |         iofb-2020a      |      gofb-2020a      |
-| Compiler + Open MPI  + FB+ScaLAPACK+FFTW|        iofbf-2020a      |     gofbf-2020a      |
-| Compiler                   + Cuda       | iccifortcuda-2020a      |   gcccuda-2020a      |
-| Compiler + Open MPI*       + Cuda       |       iompic-2020a      |    gompic-2020a      |
-| Compiler             + MKL + Cuda       |       iimklc-2020a      |     gmklc-2020a      |
-| Compiler + Open MPI* + MKL + Cuda       |       iomklc-2020a      |    gomklc-2020a      |
-|-----------------------------------------|-------------------------|----------------------|
-| GCC + Open MPI + OpenBLAS + FFTW        |            n/a          |      foss-2020a      |
-| GCC + Open MPI + OpenBLAS + FFTW + Cuda |            n/a          |  fosscuda-2020a      |
-| Intel Compiler + Intel MPI              |        iimpi-2020a      |         n/a          |
-| Intel Compiler + Intel MPI       + Cuda |       iimpic-2020a      |         n/a          |
-| Intel Compiler + Intel MPI + MKL        |        intel-2020a      |         n/a          |
-| Intel Compiler + Intel MPI + MKL + Cuda |    intelcuda-2020a      |         n/a          |
-|-----------------------------------------|-------------------------|----------------------|
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Core-Level; Comp.Can. ; mostly upstream  |                    Intel             |                GCC              |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
+| Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-9.3.0          |
+| Compiler (a-d Core) + MKL                |                     n/a              |       gcccoremkl-2020a          |
+| Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2020a          |
+| Compiler (a-d Core)          + Cuda 11.0 |                     n/a              |      gcccorecuda-2020a          |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler only                            |              iccifort-2020.1.217     |              GCC-9.3.0          |
+| Compiler             + MKL               |                 iimkl-2020a          |             gmkl-2020a          |
+| Compiler             + FlexiBLAS         |     iccifortflexiblas-2020a          |     gccflexiblas-2020a          |
+| Compiler + Open MPI                      |                 iompi-2020a          |            gompi-2020a          |
+| Compiler + Open MPI  + MKL               |                 iomkl-2020a          |            gomkl-2020a          |
+| Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2020a          |             gofb-2020a          |
+| Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2020a          |            gofbf-2020a          |
+| Compiler                     + Cuda 11.0 |          iccifortcuda-2020a          |          gcccuda-2020a          |
+| Compiler + Open MPI*         + Cuda 11.0 |                iompic-2020a          |           gompic-2020a          |
+| Compiler             + MKL   + Cuda 11.0 |                iimklc-2020a          |            gmklc-2020a          |
+| Compiler + Open MPI* + MKL   + Cuda 11.0 |                iomklc-2020a          |           gomklc-2020a          |
+| Compiler                     + Cuda 11.4 |          iccifortcuda-2020.1.114     |          gcccuda-2020.1.114     |
+| Compiler + Open MPI*         + Cuda 11.4 |                iompic-2020.1.403.114 |           gompic-2020.1.403.114 |
+| Compiler             + FB    + Cuda 11.4 | iccifortflexiblascuda-2020.1.114     | gccflexiblascuda-2020.1.114     |
+| Compiler + Open MPI* + FB    + Cuda 11.4 |                 iofbc-2020.1.403.114 |            gofbc-2020.1.403.114 |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| GCC + Open MPI + OpenBLAS + FFTW         |                     n/a              |             foss-2020a          |
+| GCC + Open MPI + OpenBLAS + FFTW + Cuda  |                     n/a              |         fosscuda-2020a          |
+| Intel Compiler + Intel MPI               |                 iimpi-2020a          |                n/a              |
+| Intel Compiler + Intel MPI       + Cuda  |                iimpic-2020a          |                n/a              |
+| Intel Compiler + Intel MPI + MKL         |                 intel-2020a          |                n/a              |
+| Intel Compiler + Intel MPI + MKL + Cuda  |             intelcuda-2020a          |                n/a              |
+|------------------------------------------|--------------------------------------|---------------------------------|
   *: Open MPI has been compiled with CUDA
 
-Modules used by these toolchains:
- intel/2020.1.217 (imkl/2020.1.217 or flexiblas/3.0.4) openmpi/4.0.3 cuda/11.0.2
- gcc/9.3.0        (imkl/2020.1.217 or flexiblas/3.0.4) openmpi/4.0.3 cuda/11.0.2
+Modules used by MKL based toolchains:
+ intel/2020.1.217 imkl/2020.1.217  openmpi/4.0.3 cuda/11.0.2
+ gcc/9.3.0        imkl/2020.1.217  openmpi/4.0.3 cuda/11.0.2
+
+Modules used by FlexiBLAS based toolchains:
+ intel/2020.1.217 flexiblas/3.0.4  openmpi/4.0.3 cuda/11.4
+ gcc/9.3.0        flexiblas/3.0.4  openmpi/4.0.3 cuda/11.4
 ```
 
 A spreadsheet of toolchains is available
