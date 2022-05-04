@@ -44,7 +44,7 @@ environment than the build node.
 
 ## How to deploy software on CVMFS
 
-Switch to the user `libuser`:
+On `publisher-node.computecanada.ca`, switch to the user `libuser`:
 
 ```
 sudo su - libuser
