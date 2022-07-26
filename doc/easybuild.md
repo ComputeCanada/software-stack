@@ -201,6 +201,8 @@ below.
 | Compiler + Open MPI*         + Cuda 11.4 |                iompic-2020.1.403.114 |           gompic-2020.1.403.114 |
 | Compiler             + FB    + Cuda 11.4 | iccifortflexiblascuda-2020.1.114     | gccflexiblascuda-2020.1.114     |
 | Compiler + Open MPI* + FB    + Cuda 11.4 |                 iofbc-2020.1.403.114 |            gofbc-2020.1.403.114 |
+| Compiler+OMPI*+FB+ScaLAPACK+FFTW+Cuda11.4|                iofbfc-2020.1.403.114 |           gofbfc-2020.1.403.114 |
+| Compiler                     + Cuda 11.7 |          iccifortcuda-2020.1.117     |          gcccuda-2020.1.117     |
 |------------------------------------------|--------------------------------------|---------------------------------|
 | GCC + Open MPI + OpenBLAS + FFTW         |                     n/a              |             foss-2020a          |
 | GCC + Open MPI + OpenBLAS + FFTW + Cuda  |                     n/a              |         fosscuda-2020a          |
