@@ -226,6 +226,38 @@ A spreadsheet of toolchains is available
 
 ![Toolchain list](images/toolchains-2020a.png)
 
+
+#### Newer alternative 2022a toolchains that can be used with StdEnv/2020
+
+These toolchains are optional and should only be used if a newer compiler or MPI implementation is necessary or
+desirable. Note that CUDA now sits on top of MPI, as the base MPI understands CUDA.
+```
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Core-Level; Comp.Can. ; mostly upstream  |                    Intel             |                GCC              |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
+| Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-11.3.0         |
+| Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2022a          |
+| Compiler (a-d Core)          + Cuda 11.7 |                     n/a              |      gcccorecuda-2022a          |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler only                            |       intel-compilers-2022.1.0       |              GCC-11.3.0         |
+| Compiler             + FlexiBLAS         |                     n/a              |     gccflexiblas-2022a          |
+| Compiler             + FlexiBLAS + FFTW  |                     n/a              |             gfbf-2022a          |
+| Compiler + Open MPI                      |                 iompi-2022a          |            gompi-2022a          |
+| Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2022a          |             gofb-2022a          |
+| Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2022a          |             foss-2022a          |
+| Compiler                     + Cuda 11.7 |                     n/a              |          gcccuda-2022a          |
+| Compiler + Open MPI          + Cuda 11.7 |                     n/a              |           gompic-2022a          |
+| Compiler            + FB     + Cuda 11.7 |                     n/a              | gccflexiblascuda-2022a          |
+| Compiler + Open MPI + FB     + Cuda 11.7 |                     n/a              |            gofbc-2022a          |
+| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                     n/a              |         fosscuda-2022a          |
+|------------------------------------------|--------------------------------------|---------------------------------|
+
+Modules used by toolchains:
+ intel/2022.1.0   flexiblas/3.2.0  openmpi/4.1.4
+ gcc/11.3.0       flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
+```
+
 ## Installing a package in EasyBuild
 
 See also: [Installing restricted software](#installing-restricted-software)
