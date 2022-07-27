@@ -243,8 +243,8 @@ desirable. Note that CUDA now sits on top of MPI, as the base MPI understands CU
 | Compiler (a-d Core)          + Cuda 11.7 |                     n/a              |      gcccorecuda-2022a          |
 |------------------------------------------|--------------------------------------|---------------------------------|
 | Compiler only                            |       intel-compilers-2022.1.0       |              GCC-11.3.0         |
-| Compiler             + FlexiBLAS         |                     n/a              |     gccflexiblas-2022a          |
-| Compiler             + FlexiBLAS + FFTW  |                     n/a              |             gfbf-2022a          |
+| Compiler             + FlexiBLAS         |                   ifb-2022a          |     gccflexiblas-2022a          |
+| Compiler             + FlexiBLAS + FFTW  |                  ifbf-2022a          |             gfbf-2022a          |
 | Compiler + Open MPI                      |                 iompi-2022a          |            gompi-2022a          |
 | Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2022a          |             gofb-2022a          |
 | Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2022a          |             foss-2022a          |
