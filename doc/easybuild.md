@@ -248,15 +248,15 @@ desirable. Note that CUDA now sits on top of MPI, as the base MPI understands CU
 | Compiler + Open MPI                      |                 iompi-2022a          |            gompi-2022a          |
 | Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2022a          |             gofb-2022a          |
 | Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2022a          |             foss-2022a          |
-| Compiler                     + Cuda 11.7 |                     n/a              |          gcccuda-2022a          |
-| Compiler + Open MPI          + Cuda 11.7 |                     n/a              |           gompic-2022a          |
-| Compiler            + FB     + Cuda 11.7 |                     n/a              | gccflexiblascuda-2022a          |
-| Compiler + Open MPI + FB     + Cuda 11.7 |                     n/a              |            gofbc-2022a          |
-| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                     n/a              |         fosscuda-2022a          |
+| Compiler                     + Cuda 11.7 |    intelcompilerscuda-2022a          |          gcccuda-2022a          |
+| Compiler + Open MPI          + Cuda 11.7 |                iompic-2022a          |           gompic-2022a          |
+| Compiler            + FB     + Cuda 11.7 |                  ifbc-2022a          | gccflexiblascuda-2022a          |
+| Compiler + Open MPI + FB     + Cuda 11.7 |                 iofbc-2022a          |            gofbc-2022a          |
+| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2022a          |         fosscuda-2022a          |
 |------------------------------------------|--------------------------------------|---------------------------------|
 
 Modules used by toolchains:
- intel/2022.1.0   flexiblas/3.2.0  openmpi/4.1.4
+ intel/2022.1.0   flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
  gcc/11.3.0       flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
 ```
 
