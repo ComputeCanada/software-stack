@@ -123,6 +123,8 @@ sudo /etc/rsnt/publish_transaction dev
 sudo /etc/rsnt/start_transaction prod
 /etc/rsnt/rsnt-sync --what easybuild --software dealii --version 8.4.2
 sudo /etc/rsnt/publish_transaction prod
+
+exit
 ```
 
 ### Deploying to the restricted repository with CVMFS
