@@ -950,7 +950,7 @@ such an example. Part of the software is a dataset named `panther`. It can be in
 ```
 eb panther-14.1-system.eb --installpath-software=/cvmfs/public.data.computecanada.ca/content/easybuild/data/2020
 ``` 
-This will install the data inside of `/cvmfs/data.rsnt.computecanada.ca/content/easybuild/software/`, while the module will
+This will install the data inside of `/cvmfs/public.data.computecanada.ca/content/easybuild/data/2020`, while the module will
 be installed under `/cvmfs/soft.computecanada.ca/easybuild/modules`. Synchronizing to CVMFS is then performed in the same way
 as for restricted software, by starting transactions on two different repositories. 
 
