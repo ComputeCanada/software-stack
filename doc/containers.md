@@ -8,9 +8,10 @@ infrastructure.
 ## Before building a container image
 Container images in our environment are intended to be a last resort option. They are to be used only for software packages that are too complicated to install with our other methods such as [EasyBuild](easybuild.md) or [Python wheels](python.md). Such examples could be software packages that heavily depend on Anaconda, or complex workflows with a lot of intertwined dependencies. If you are not certain that the container you want to build meets these criteria, we encourage you to ask in our #rsnt-software Slack channel. 
 
+Please be aware that we intend to deploy an [automated container publishing system](https://cvmfs.readthedocs.io/en/latest/cpt-containers.html#distributing-container-images-on-cernvm-fs) when it is available. It will regularly pull, convert, and publish a list of approved container images, from an OCI-format ("Docker") container registry to a CVMFS repository. Keep in mind that in the future it may be advantageous and desirable to use the automated system to publish container images instead, but the manual procedure described here will still be possible.
+
 ## Where to build a container image 
 Our build nodes have the required configuration to build container images. Every staff member of the federation can get access to our build nodes. Please refer to our [initial setup](https://github.com/ComputeCanada/software-stack/blob/containers-doc/doc/setup.md#before-you-begin) page for instructions on requesting access to those nodes.
-
 
 # Building a container image
 One you have determined that the container you want to build meets the above criteria, building a container on our infrastructure is done through a [script](https://github.com/ComputeCanada/containers-recipes/blob/main/build_container_image.sh) which supports building a container image based on three different types of sources:
