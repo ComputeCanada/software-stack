@@ -12,13 +12,13 @@ Container images in our environment are intended to be a last resort option. The
 Our build nodes have the required configuration to build container images. Every staff member of the federation can get access to our build nodes. Please refer to our [initial setup](https://github.com/ComputeCanada/software-stack/blob/containers-doc/doc/setup.md#before-you-begin) page for instructions on requesting access to those nodes.
 
 
-# Building and deploying a container
+# Building a container image
 One you have determined that the container you want to build meets the above criteria, building a container on our infrastructure is done through a [script](https://github.com/ComputeCanada/containers-recipes/blob/main/build_container_image.sh) which supports building a container image based on three different types of sources:
 1. It can build based on an [Apptainer definition file](https://apptainer.org/docs/user/main/definition_files.html)
 2. It can build based on a [Dockerfile](https://docs.docker.com/engine/reference/builder)
 3. It can pull an existing container image from a public container registry
 
-## Building a container using [build_container_image.sh](https://github.com/ComputeCanada/containers-recipes/blob/main/build_container_image.sh)
+## Building a container image using [build_container_image.sh](https://github.com/ComputeCanada/containers-recipes/blob/main/build_container_image.sh)
 Our `build_container_image.sh` script has 5 mandatory options: 
 * `-i` indicates the source type. This is one of `<def|Dockerfile|image>`
 * `-s` indicates the source to use. For `def` and `Dockerfile` types of source, this is the relative path to the recipe. For `image` type of source, this is the argument that you would pass to a `podman pull` or `docker pull` command. 
