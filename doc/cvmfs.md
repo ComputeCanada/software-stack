@@ -11,6 +11,7 @@
 - [Advanced options to the `rsnt-sync` script](#advanced-options-to-the-rsnt-sync-script)
 - [Examples of `rsnt-sync` commands](#examples-of-rsnt-sync-commands)
 
+
 ## Introduction
 
 This page covers only essential information about using CVMFS with our
@@ -164,6 +165,21 @@ sudo /etc/rsnt/start_transaction data
 sudo /etc/rsnt/publish_transaction data
 sudo /etc/rsnt/publish_transaction <dev|prod>
 
+exit
+```
+
+### Deploying containers with CVMFS
+Deploying containers with CVMFS works similarly to other options, with the exception that it has
+a dedicated user, `libuser-containers`. To deploy a container named `NAME-VERSION` on CVMFS, do the following: 
+
+```
+sudo su - libuser-containers
+
+sudo /etc/rsnt/start_transaction containers
+
+/etc/rsnt/rsnt-sync --what containers --path NAME-VERSION
+
+sudo /etc/rsnt/publish_transaction containers
 exit
 ```
 
