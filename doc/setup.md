@@ -10,7 +10,7 @@
 
 ## Before you begin
 As a Compute Canada staff, ensure that you have requested the proper permissions, and configured your account, as described on
-https://wiki.computecanada.ca/staff/RSNT_Software_-_Setting_up
+https://wiki.alliancecan.ca/wiki/RSNT_Software_-_Setting_up
 
 ## Git configuration
 
@@ -36,7 +36,7 @@ only need the first two. We recommend getting only the first one to start.
 
 If you are installing a software package with EasyBuild, you will need to have a
 clone of the `easybuild-easyconfigs` repository in your account on
-`build-node.computecanada.ca`. To do that, run the commands:
+`build-nodes.alliancecan.ca`. To do that, run the commands:
 
 ```
 cd

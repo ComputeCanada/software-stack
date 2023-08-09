@@ -68,14 +68,14 @@ Recipes provided must meet the following requirements to be accepted:
 
 Once you have built the container image in your own account and tested it, open the pull request on our repository, and ask in #rsnt-software for it to be reviewed and merged. You can only build centrally after this step has happened. 
 
-### Updating central recipes on the build-node
-Staff members with the appropriate permissions can update a central clone of our `containers-recipes` repository on our build-node using the command
+### Updating central recipes on the build-nodes
+Staff members with the appropriate permissions can update a central clone of our `containers-recipes` repository on our build-nodes using the command
 ```
 sudo -iu containeruser  pull_containers-recipes
 ``` 
 
 ### Building the image centrally
-Staff members with the appropriate permissions can build the container image to be stored under `/cvmfs/containers.computecanada.ca/content/containers/` on our build-node using the command
+Staff members with the appropriate permissions can build the container image to be stored under `/cvmfs/containers.computecanada.ca/content/containers/` on our build-nodes using the command
 ```
 sudo -iu containeruser build_container_image.sh <options>
 ``` 

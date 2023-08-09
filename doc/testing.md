@@ -8,7 +8,7 @@ available to the users.
 ### Contents
 
 - [Installing in your home folder](#installing-in-your-home-folder)
-- [Testing on the build node](#testing-on-the-build-node)
+- [Testing on the build nodes](#testing-on-the-build-nodes)
 - [Testing with the test nodes](#testing-with-the-test-nodes)
 - [Testing with proot on the clusters](#testing-with-proot-on-the-clusters)
 
@@ -19,9 +19,9 @@ directory than our default. You simply have to **omit** the `sudo -i -u ebuser`
 part of the commands and it will install it only for you. 
 EasyBuild will install the software and modules in the folder `$HOME/.local`.
 
-## Testing on the build node
+## Testing on the build nodes
 
-Once you have installed new software on the build node it should be 
+Once you have installed new software on the build nodes it should be 
 automatically usable on this node. Until software is
 actually pushed to CVMFS, none of it is visible to any users. It is therefore a
 good time to test the software before it is pushed to production. You can run
@@ -47,7 +47,7 @@ in `/cvmfs/soft.computecanada.ca`  and reroute it to the same path in
 You can push your newly installed software to the development CVMFS repository.
 This will make it visible on all nodes that mount it. There is one such node:
 
-- `cvmfs-client-dev.computecanada.ca`
+- `cvmfs-client-dev.alliancecan.ca`
 
 However, the production clusters do not see these software packages repository.
 

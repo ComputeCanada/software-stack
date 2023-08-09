@@ -50,7 +50,7 @@ ls -1 ANSYS-18.1.tar
 
 ## Easybuild recipe
 
-On the build-node:
+On the build-nodes:
 
 ```
 # Clone repository if not done already
@@ -87,7 +87,7 @@ diff ANSYS-18.1.eb ANSYS-18.2.eb
 ## Testing the local installation
 
 Proceed with a test installation in your home directory (`./local/easybuild`) on
-the build-node:
+the build-nodes:
 
 ```
 screen -S ansys181
@@ -95,13 +95,13 @@ eb ANSYS-18.1.eb --sourcepath=/cvmfs/restricted.computecanada.ca/easybuild/sourc
 # To detach from screen: Ctrl+A, D
 ```
 
-Once installed, reconnect to the build-node with X11 forwarding. Then:
+Once installed, reconnect to the build-nodes with X11 forwarding. Then:
 
 ```
 module use $HOME/.local/easybuild/modules/2017/Core
 module load ansys/18.1
 
-# You may have to put the build-node's IP address in the license server firewall
+# You may have to put the build-nodes's IP address in the license server firewall
 export ANSYSLMD_LICENSE_FILE=1055@<license_server>
 export ANSYSLI_SERVERS=2325@<license_server>
 
@@ -156,7 +156,7 @@ touch .licenses/ansys.lic
 ```
 
 The content of the `ansys.lic` is described [on that
-page](https://docs.computecanada.ca/wiki/ANSYS#Configuring_your_own_license_file).
+page](https://docs.alliancecan.ca/wiki/ANSYS#Configuring_your_own_license_file).
 Then:
 
 ```
@@ -168,7 +168,7 @@ If the test succeed, then it is possible to publish to the prod repository.
 
 ## Publication on prod
 
-Back to `build-node`:
+Back to `build-nodes`:
 
 ```
 screen -d -r ansys181

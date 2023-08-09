@@ -1,7 +1,7 @@
 # Software management
 
 **Note:** Staff members should first read our internal [Software
-Installation](https://wiki.computecanada.ca/staff/Software_installation)
+Installation](https://wiki.alliancecan.ca/wiki/Software_installation)
 documentation to learn how to request privileged access, set up their account,
 process software installation tickets, etc.
 

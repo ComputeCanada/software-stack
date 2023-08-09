@@ -38,14 +38,14 @@ before going to the production repository. Synchronization always happens:
 - From the development repository to the production repository
 
 The idea is that you first test your newly deployed software on the
-`cvmfs-client-dev.computecanada.ca` client before deploying it to the production
+`cvmfs-client-dev.alliancecan.ca` client before deploying it to the production
 repository. This is to ensure that you do not forget to synchronize some files,
 and to ensure that the piece of software actually works on a different
 environment than the build node.
 
 ## How to deploy software on CVMFS
 
-On `publisher-node.computecanada.ca`, switch to the user `libuser`:
+On `publisher-node.alliancecan.ca`, switch to the user `libuser`:
 
 ```
 sudo su - libuser

@@ -145,7 +145,7 @@ git commit
 git push
 ```
 
-The final step is to move this into “build-node” production; the first command
+The final step is to move this into “build-nodes” production; the first command
 syncs the channel from github:
 
 ```

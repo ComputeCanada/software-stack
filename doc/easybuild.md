@@ -326,7 +326,7 @@ parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolc
 The `StdEnv/2020` is built on top of Gentoo.
 In order for EasyBuild to choose the correct toolchains and underlying Gentoo, a suitable StdEnv needs
 to be loaded before invoking `eb`. 
-As of March 15th, 2020, on build-node, `StdEnv/2020` is the default environment. 
+As of March 15th, 2020, on build-nodes, `StdEnv/2020` is the default environment. 
 
 ### Creating or changing a recipe
 
@@ -857,9 +857,9 @@ local found = find_and_define_license_file(“MLM_LICENSE_FILE”,“matlab”)
 
 if (not found) then
         local error_message = [[
-        We did not find a suitable license for Matlab. If you have access to one, you can create the file $HOME/.licenses/matlab.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@computecanada.ca so that we can configure it.
+        We did not find a suitable license for Matlab. If you have access to one, you can create the file $HOME/.licenses/matlab.lic with the license information. If you think you should have access to one as    part of your institution, please write to support@tech.alliancecan.ca that we can configure it.
 
-        Nous n’avons pas trouve de licence utilisable pour Matlab. Si vous avez acces a une licence de Matlab, vous pouvez creer le fichier $HOME/.licenses/matlab.lic avec l’information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@calculcanada.ca pour que nous puissions la configurer.
+        Nous n’avons pas trouve de licence utilisable pour Matlab. Si vous avez acces a une licence de Matlab, vous pouvez creer le fichier $HOME/.licenses/matlab.lic avec l’information de la licence. Si vous    pensez que vous devriez automatiquement avoir acces a une licence via votre institution, veuillez ecrire a support@tech.alliancecan.ca pour que nous puissions la configurer.
         ]]
         LmodError(error_message)
 end
@@ -884,7 +884,7 @@ restrictions), add the name of the software in the list for the `posix_group`
 type of restriction in the `licenseT` table. Also add the POSIX group needed in
 the `groupT` table. This will test whether the user is part of this group or
 not, and if not, refuse to load the module and instruct the user to write to
-support@computecanada.ca to get added to the POSIX group.
+support@tech.alliancecan.ca to get added to the POSIX group.
 
 ### Installing the software
 
@@ -936,12 +936,12 @@ restricted pieces of software. This is done in the file
 
 Existing POSIX groups to manage access to some software (CC staff links):
 
-- [soft_cpmd](https://ccdb.computecanada.ca/services/soft_cpmd)
-- [soft_vasp5](https://ccdb.computecanada.ca/services/soft_vasp5)
-- [soft_vasp4](https://ccdb.computecanada.ca/services/soft_vasp4)
-- [soft_dl_poly4](https://ccdb.computecanada.ca/services/soft_dl_poly4)
-- [soft_orca](https://ccdb.computecanada.ca/services/soft_orca)
-- [soft_gaussian](https://ccdb.computecanada.ca/services/soft_gaussian)
+- [soft_cpmd](https://ccdb.alliancecan.ca/services/soft_cpmd)
+- [soft_vasp5](https://ccdb.alliancecan.ca/services/soft_vasp5)
+- [soft_vasp4](https://ccdb.alliancecan.ca/services/soft_vasp4)
+- [soft_dl_poly4](https://ccdb.alliancecan.ca/services/soft_dl_poly4)
+- [soft_orca](https://ccdb.alliancecan.ca/services/soft_orca)
+- [soft_gaussian](https://ccdb.alliancecan.ca/services/soft_gaussian)
 
 ## Installing datasets
 In rare occasions, a piece of software requires large datasets to be installed. If these are larger than 50GB or
@@ -964,5 +964,5 @@ as for restricted software, by starting transactions on two different repositori
 
 **Q:** Is there any way we can find who built a module?
 
-**A:** From `build-node.computecanada.ca`, you can type `who_installed.sh
+**A:** From `build-nodes.alliancecan.ca`, you can type `who_installed.sh
 <module name>`.
