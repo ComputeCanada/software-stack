@@ -260,6 +260,35 @@ Modules used by toolchains:
  gcc/11.3.0       flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
 ```
 
+#### Toolchains to use with StdEnv/2023
+
+```
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Core-Level; Comp.Can. ; mostly upstream  |                    Intel             |                GCC              |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
+| Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-12.3.0         |
+| Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2023a          |
+| Compiler (a-d Core)          + Cuda 12.2 |                     n/a              |      gcccorecuda-2023a          |
+|------------------------------------------|--------------------------------------|---------------------------------|
+| Compiler only                            |       intel-compilers-2023.2.1       |              GCC-12.3.0         |
+| Compiler             + FlexiBLAS         |                   ifb-2023a          |     gccflexiblas-2023a          |
+| Compiler             + FlexiBLAS + FFTW  |                  ifbf-2023a          |             gfbf-2023a          |
+| Compiler + Open MPI                      |                 iompi-2023a          |            gompi-2023a          |
+| Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2023a          |             gofb-2023a          |
+| Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2023a          |             foss-2023a          |
+| Compiler                     + Cuda 12.2 |    intelcompilerscuda-2023a          |          gcccuda-2023a          |
+| Compiler + Open MPI          + Cuda 12.2 |                iompic-2023a          |           gompic-2023a          |
+| Compiler            + FB     + Cuda 12.2 |                  ifbc-2023a          | gccflexiblascuda-2023a          |
+| Compiler + Open MPI + FB     + Cuda 12.2 |                 iofbc-2023a          |            gofbc-2023a          |
+| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2023a          |         fosscuda-2023a          |
+|------------------------------------------|--------------------------------------|---------------------------------|
+
+Modules used by toolchains:
+ intel/2023.2.1   flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
+ gcc/12.3         flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
+```
+
 ## Installing a package in EasyBuild
 
 See also: [Installing restricted software](#installing-restricted-software)
