@@ -36,18 +36,26 @@ only need the first two. We recommend getting only the first one to start.
 
 If you are installing a software package with EasyBuild, you will need to have a
 clone of the `easybuild-easyconfigs` repository in your account on
-`build-nodes.alliancecan.ca`. To do that, run the commands:
+`build-nodes.alliancecan.ca`. 
+
+Secondly, if you are planning on making changes (such as [creating and changing EasyBuild
+recipes](easybuild.md#creating-or-changing-a-recipe)), make sure you install
+your SSH public key into your GitHub account.
+
+To check out the EasyBuild repositories, please run the commands:
 
 ```
 cd
 git clone https://github.com/ComputeCanada/easybuild-easyconfigs.git
+git clone --branch 2023 https://github.com/ComputeCanada/easybuild-easyconfigs.git easybuild-easyconfigs-2023
 ```
 
 In some rare cases, you may also need to edit EasyBlocks. For that, you would need the `easybuild-easyblocks` repository:
 
 ```
 cd
-git clone https://github.com/ComputeCanada/easybuild-easyblocks.git
+git clone git@github.com:ComputeCanada/easybuild-easyblocks.git
+git clone --branch 2023 git@github.com:ComputeCanada/easybuild-easyblocks.git easybuild-easyblocks-2023
 ```
 
 In extremely rare cases, you might need to have the `easybuild-framework`
@@ -56,16 +64,7 @@ itself. You would get it by running:
 
 ```
 cd
-git clone https://github.com/ComputeCanada/easybuild-framework.git
-```
-
-If you are planning on making changes (such as [creating and changing EasyBuild
-recipes](easybuild.md#creating-or-changing-a-recipe)), make sure you install
-your SSH public key into your GitHub account and also verify that `.git/config`
-contains the proper `url` setting like shown below:
-
-```
-url = git@github.com:ComputeCanada/easybuild-easyconfigs.git
+git clone git@github.com:ComputeCanada/easybuild-framework.git
 ```
 
 ## Gentoo repository
@@ -75,5 +74,5 @@ you can clone our `gentoo-overlay` repository using:
 
 ```
 cd
-git clone https://github.com/ComputeCanada/gentoo-overlay.git
+git clone git@github.com:ComputeCanada/gentoo-overlay.git
 ```
