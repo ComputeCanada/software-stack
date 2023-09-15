@@ -63,9 +63,10 @@ know when using EasyBuild on our software stack.
 - **Do not use the `--robot`/`-r` flag when installing a software package.**
   This flag tends to install all of the dependencies, which might not be the
   default versions that we have.
-- **Do not use the standard upstream toolchains `intel` and `foss`.**  These
+- **Do not use the standard upstream toolchain `intel`, and `foss` (<2022).**  These
   toolchains use either Intel MPI or OpenBLAS, both of which we don't use much.
   Prefer the toolchains listed in the EasyBuild toolchains section.
+  The toolchains `foss-2022a` and `foss-2023a` are standard and recommended.
 - **Do not use `versionsuffix`.** Our module naming scheme discards
   `versionsuffix`. Prefer using `modaltsoftname` to change the name of the
   module, rather than adding a version suffix.
@@ -159,13 +160,19 @@ Core toolchains are not dependent on a specific compiler:
 - GCC: 8.4.0, 9.3.0, 10.3.0
 - NVHPC: 20.7
 
+#### Compiler-only toolchains for StdEnv/2023
+
+- iccifort: 2023.2.1
+- GCC: 12.3.0
+- NVHPC: 23.7
+
 #### Family toolchains
 
 Family toolchains are a combination of **Compiler [+ MKL/FlexiBLAS [+ CUDA [+ Open
 MPI]]]**, for example:
 
 - GCC: `GCC`, `gmkl`, `gccflexiblas`, `gompi`, `gomkl`, `gofb`, `gofbf`,
-  `gcccuda`, `gompic`, `gmklc`, `gccflexiblascuda`, `gomklc`, `gofbc`
+  `gcccuda`, `gompic`, `gmklc`, `gccflexiblascuda`, `gomklc`, `gofbc`, `foss`
 - Intel: `iccifort`, `iimkl`, `iccifortflexiblas`, `iompi`, `iomkl`, `iofb`, `iofbf`,
   `iccifortcuda`, `iompic`, `iimklc`, `iccifortflexiblascuda`, `iomklc`, `iofbc`
 - PGI: `pgi`, `pomkl`, `pompi`
@@ -355,9 +362,16 @@ parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolc
 The `StdEnv/2020` is built on top of Gentoo.
 In order for EasyBuild to choose the correct toolchains and underlying Gentoo, a suitable StdEnv needs
 to be loaded before invoking `eb`. 
-As of March 15th, 2020, on build-nodes, `StdEnv/2020` is the default environment. 
+As of March 15th, 2020, on build-nodes, `StdEnv/2020` is the default environment.
 
-### Creating or changing a recipe
+For `StdEnv/2023` please run
+
+```
+module --force purge
+module load gentoo/2023
+```
+
+### Creating or changing a recipe (2020)
 
 Because often a few things need changing in the easyconfig file we are going to
 check out a git repository and work with that.
@@ -517,6 +531,172 @@ deployed, it will not be visible on the clusters.
 
 In general it is best to work by example. There are thousands of easyconfig
 files in the `easybuild-easyconfigs` GitHub repository.
+
+### Creating or changing a recipe (2023)
+
+Because often a few things need changing in the easyconfig file we are going to
+check out a git repository and work with that.
+
+```
+module --force purge
+module load gentoo/2023
+cd easybuild-easyconfigs-2023
+git pull
+git checkout 2023
+```
+
+Then you make the directory of (if needed) and `cd` to the package, e.g.:
+
+```
+mkdir -p easybuild/easyconfigs/i/igraph
+cd easybuild/easyconfigs/i/igraph
+```
+
+And create a new easyconfig to make modifications, by copying from the upstream repository:
+```
+cp $EBROOTGENTOO/easybuild/easyconfigs/i/igraph/igraph-0.10.6-foss-2022b.eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
+```
+if the recipe were in the 2020 easyconfig repository, please copy from there, e.g.
+```
+cp ~/easybuild-easyconfigs/easybuild/easyconfigs/i/igraph/igraph-0.10.6-foss-2022b.eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
+```
+
+The change from `foss-2020a` to `gcccoreflexiblas-2023a` is a toolchain change. We do
+not expose the toolchains to users but use them internally to denote compiler,
+MPI and linear algebra combinations.
+
+File `igraph-0.10.6-gcccoreflexiblas-2023a.eb` is then edited as follows:
+
+```
+easyblock = 'CMakeMake'
+
+name = 'igraph'
+version = '0.10.6'
+
+homepage = 'https://igraph.org'
+description = """igraph is a collection of network analysis tools with the emphasis on
+efficiency, portability and ease of use. igraph is open source and free. igraph can be
+programmed in R, Python and C/C++."""
+
+toolchain = {'name': 'gcccoreflexiblas', 'version': '2023a'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
+sources = [SOURCE_TAR_GZ]
+checksums = ['99bf91ee90febeeb9a201f3e0c1d323c09214f0b5f37a4290dc3b63f52839d6d']
+
+builddependencies = [
+    ('CMake', '3.24.3'),
+]
+
+dependencies = [
+    ('GLPK', '5.0'),
+    ('libxml2', '2.10.3'),
+    ('zlib', '1.2.12'),
+    ('arpack-ng', '3.8.0'),
+]
+
+# Build static and shared libraries
+configopts = ["-DBUILD_SHARED_LIBS=OFF", "-DBUILD_SHARED_LIBS=ON"]
+
+multi_deps = {'Python': ['3.10', '3.11'] }
+multi_deps_extensions_only = True
+
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+
+sanity_check_paths = {
+    'files': ['lib/libigraph.%s' % x for x in [SHLIB_EXT, 'la', 'a']] + ['lib/pkgconfig/igraph.pc'] +
+             ['include/igraph/igraph%s.h' % x for x in ['', '_blas', '_constants', '_lapack', '_types', '_version']],
+    'dirs': [],
+}
+
+moduleclass = 'lib'
+```
+
+Two changes were made from the original which can be found
+[here](https://github.com/EasyBuilders/easybuild-easyconfigs/blob/main/easybuild/easyconfigs/i/igraph/igraph-0.10.6-foss-2023a.eb):
+
+- Changing the toolchain to `gcccoreflexiblas,2023a`. It is quite frequent that the upstream versions
+of EasyBuild recipes use an over-complete toolchain, i.e. a toolchain which includes dependencies that
+are not needed. In this example, the upstream recipe uses "foss" which includes OpenMPI, but igraph does
+not use OpenMPI. We "downgrade" the toolchain to gcccoreflexiblas, which uses GCC and FlexiBLAS.
+- Adding the section for Python extensions: 
+```
+multi_deps = {'Python': ['3.10', '3.11'] }
+multi_deps_extensions_only = True
+
+exts_defaultclass = 'PythonPackage'
+exts_list = [
+    ('python-igraph', version, {
+        'modulename': 'igraph',
+        'source_tmpl': '%(name)s-%(version)s.tar.gz',
+        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
+        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
+    }),
+]
+modextrapaths = {
+# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
+    'EBPYTHONPREFIXES': [''],
+}
+``` 
+When it makes sense, we try to install the python bindings alongside the main
+code. In this case, we install the `python-igraph` package. Whenever possible, we
+also try to install it for multiple versions of python. This is done with the 
+`multi_deps` option. Finally, the `EBPYTHONPREFIXES` environment variable is used by
+our python configuration to find packages compatible with the version of python that
+is being used.
+
+
+```
+eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
+module load igraph/0.10.6
+```
+
+Please refer to the [Checksums in EasyConfig
+recipes](#checksums-in-easyconfig-recipes) section to learn how to add a
+checksum to your new recipe.
+
+This uses the file that you just changed in the current directory. Once you are
+satisfied with the local build, you can then add the file to the git repository:
+
+```
+git add igraph-0.10.6-gcccoreflexiblas-2023a.eb
+git pull origin 2023
+git commit -m "commit message goes here"
+git push origin 2023
+```
+
+The final step to install it on the build node, is to pull it and install it as
+the user `ebuser`; the first command syncs the channel from GitHub:
+
+```
+sudo -iu ebuser eb-pull-cc
+sudo -iu ebuser eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
+```
+
+Note that if you installed the package in your own account, that version will
+have priority over the globally installed version. Remove the folder
+`$HOME/.local/easybuild` if you want to get rid of the version installed in your
+home.
+
+Once this is done, you must [deploy on CVMFS](cvmfs.md). Unless the software is
+deployed, it will not be visible on the clusters.
+
+In general it is best to work by example. There are thousands of easyconfig
+files in the `easybuild-easyconfigs` GitHub repository.
+
 
 ### Checksums in EasyConfig recipes
 
