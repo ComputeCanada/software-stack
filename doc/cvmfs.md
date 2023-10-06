@@ -64,6 +64,7 @@ want to run one of the commands below, with the most common at the top:
 ```
 # Note: <software name> must be lowercase module name, regardless of what the recipe is named ...
 /etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+/etc/rsnt/rsnt-sync --what wheels
 /etc/rsnt/rsnt-sync --what gentoo
 /etc/rsnt/rsnt-sync --what custom --path <path>
 /etc/rsnt/rsnt-sync --what config
@@ -256,12 +257,12 @@ name>`.
 - To synchronize every Python wheels, use:
 
 ```
-/etc/rsnt/rsnt-sync --what custom --path python/wheelhouse
+/etc/rsnt/rsnt-sync --what wheels
 ```
 
 - To synchronize specific Python wheels, use:
 
 ```
-/etc/rsnt/rsnt-sync --what custom --path python/wheelhouse --software numpy --version 1.18
+/etc/rsnt/rsnt-sync --what wheels --software numpy --version 1.18
 ```
 
