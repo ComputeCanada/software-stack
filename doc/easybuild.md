@@ -162,7 +162,7 @@ Core toolchains are not dependent on a specific compiler:
 
 #### Compiler-only toolchains for StdEnv/2023
 
-- iccifort: 2023.2.1
+- intel-compilers: 2023.2.1
 - GCC: 12.3.0
 - NVHPC: 23.7
 
@@ -367,8 +367,7 @@ As of March 15th, 2020, on build-nodes, `StdEnv/2020` is the default environment
 For `StdEnv/2023` please run
 
 ```
-module --force purge
-module load gentoo/2023
+module load StdEnv/2023
 ```
 
 ### Creating or changing a recipe (2020)
@@ -538,8 +537,7 @@ Because often a few things need changing in the easyconfig file we are going to
 check out a git repository and work with that.
 
 ```
-module --force purge
-module load gentoo/2023
+module load StdEnv/2023
 cd easybuild-easyconfigs-2023
 git pull
 git checkout 2023
