@@ -287,6 +287,7 @@ Modules used by toolchains:
 | Compiler                     + Cuda 12.2 |    intelcompilerscuda-2023a          |          gcccuda-2023a          |
 | Compiler + Open MPI          + Cuda 12.2 |                iompic-2023a          |           gompic-2023a          |
 | Compiler            + FB     + Cuda 12.2 |                  ifbc-2023a          | gccflexiblascuda-2023a          |
+| Compiler            + FB+FFTW+ Cuda 12.2 |                 ifbfc-2023a          |            gfbfc-2023a          |
 | Compiler + Open MPI + FB     + Cuda 12.2 |                 iofbc-2023a          |            gofbc-2023a          |
 | Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2023a          |         fosscuda-2023a          |
 |------------------------------------------|--------------------------------------|---------------------------------|
