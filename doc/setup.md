@@ -47,7 +47,6 @@ To check out the EasyBuild repositories, please run the commands:
 ```
 cd
 git clone https://github.com/ComputeCanada/easybuild-easyconfigs.git
-git clone --branch 2023 https://github.com/ComputeCanada/easybuild-easyconfigs.git easybuild-easyconfigs-2023
 ```
 
 In some rare cases, you may also need to edit EasyBlocks. For that, you would need the `easybuild-easyblocks` repository:
