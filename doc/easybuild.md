@@ -1153,7 +1153,7 @@ Existing POSIX groups to manage access to some software (CC staff links):
 
 ## Installing datasets
 In rare occasions, a piece of software requires large datasets to be installed. If these are larger than 50GB or
-if they contain many files larger than 1GB, they should be installed in the `data.rsnt` repository. Interproscan is
+if they contain many files larger than 1GB, they should be installed in the `public.data` repository. Interproscan is
 such an example. Part of the software is a dataset named `panther`. It can be installed as such: 
 ```
 eb panther-14.1-system.eb --installpath-software=/cvmfs/public.data.computecanada.ca/content/easybuild/data/2020
