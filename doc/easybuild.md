@@ -63,10 +63,10 @@ know when using EasyBuild on our software stack.
 - **Do not use the `--robot`/`-r` flag when installing a software package.**
   This flag tends to install all of the dependencies, which might not be the
   default versions that we have.
-- **Do not use the standard upstream toolchain `intel`, and `foss` (<2022).**  These
-  toolchains use either Intel MPI or OpenBLAS, both of which we don't use much.
+- **Do not use the standard upstream toolchain `intel`.**  This
+  toolchain uses Intel MPI which we don't use much.
   Prefer the toolchains listed in the EasyBuild toolchains section.
-  The toolchains `foss-2022a` and `foss-2023a` are standard and recommended.
+  The `foss` toolchains are now standard and recommended, unless it can be "lowered".
 - **Do not use `versionsuffix`.** Our module naming scheme discards
   `versionsuffix`. Prefer using `modaltsoftname` to change the name of the
   module, rather than adding a version suffix.
@@ -90,7 +90,7 @@ For example, `eb -S GROMACS` or `eb -S gromacs` gives a list of easyconfig
 ### Background
 
 Toolchains are a core concept within EasyBuild. A toolchain is a set of
-recipes/modules that includes compilers (GCC, Intel, PGI), MPI implementations
+recipes/modules that includes compilers (GCC, Intel, NVHPC), MPI implementations
 (such as OpenMPI), Cuda,  and core mathematical libraries such as MKL and the
 FlexiBLAS wrapper library.
 Toolchains are layered, with more complex toolchains being built out of a
@@ -112,7 +112,7 @@ eb --list-toolchains
 ```
 
 **Important:** Toolchains in EasyBuild recipes are case-sensitive, while our
-modules are all lowercase. Except `GCCCore`, `GCC`, `PGI`, all toolchain names
+modules are all lowercase. Except `GCCCore`, `GCC`, `NVHPC`, all toolchain names
 are lowercase.
 
 **Important:** Toolchain versions are somewhat obscure since they are
@@ -129,11 +129,9 @@ Please stick with one of the standard CC toolchains, unless you have a good
 reason not to. To get a complete up-to-date list of available toolchains, see
 the above instructions.
 
-Note that the `iofbf,2020a` toolchain and its subtoolchains `iofb`, `iompi`,
-`iccifortflexiblas`, and `iccifort` are the main toolchains that we use; its components
-are loaded by default when logging into the system. The FlexiBLAS-based toolchains
-are preferred to MKL-based toolchains for new installations, since they allow the use
-of other libraries than MKL (BLIS or OpenBLAS) on non-Intel systems.
+Note that the `foss,2023a` toolchain and its subtoolchains `gofb`, `gompi`,
+`gfb`, and `GCC` are the main toolchains that we use; its components
+are loaded by default when logging into the system. 
 
 #### Toolchain hierarchy
 
@@ -148,23 +146,17 @@ Core toolchains are not dependent on a specific compiler:
 - `SYSTEM` in easyconfigs or `system,system` for `--try-toolchain`: For
   binary-only installations, and codes without architecture-dependent
   optimization.
-- `GCCcore,9.3.0`: This uses an
-  EasyBuild-provided GCC 9.3.0 with architecture-dependent optimization. It can
-  be combined with FlexiBLAS in the `gcccoreflexiblas,2020a` toolchain. This toolchain is
+- `GCCcore,12.3.0`: This uses
+  GCC 12.3.0 with architecture-dependent optimization. It can
+  be combined with FlexiBLAS in the `gcccoreflexiblas,2023a` toolchain. This toolchain is
   useful for codes that don't use MPI and are not typically compiled with the
   Intel compiler as well, such as R, Julia, Python, and various base libraries.
 
 #### Compiler-only toolchains
 
-- iccifort: 2020.1.217, 2021.2.0
-- GCC: 8.4.0, 9.3.0, 10.3.0
-- NVHPC: 20.7
-
-#### Compiler-only toolchains for StdEnv/2023
-
-- intel-compilers: 2023.2.1
-- GCC: 12.3.0
-- NVHPC: 23.7
+- intel-compilers: 2023.2.1, 2024.2.0
+- GCC: 12.3.0, 13.3.0
+- NVHPC: 23.9, 25.1
 
 #### Family toolchains
 
@@ -173,99 +165,12 @@ MPI]]]**, for example:
 
 - GCC: `GCC`, `gmkl`, `gccflexiblas`, `gompi`, `gomkl`, `gofb`, `gofbf`,
   `gcccuda`, `gompic`, `gmklc`, `gccflexiblascuda`, `gomklc`, `gofbc`, `foss`
-- Intel: `iccifort`, `iimkl`, `iccifortflexiblas`, `iompi`, `iomkl`, `iofb`, `iofbf`,
-  `iccifortcuda`, `iompic`, `iimklc`, `iccifortflexiblascuda`, `iomklc`, `iofbc`
-- PGI: `pgi`, `pomkl`, `pompi`
+- Intel: `intel-compilers`, `iimkl`, `ifb`, `iompi`, `iomkl`, `iofb`, `iofbf`,
+  `intelcompilerscuda`, `iompic`, `iimklc`, `ifbc`, `iomklc`, `iofbc`
 - NVHPC: `NVHPC`, `nvompi`, `nvhpccuda`, `nvompic`
 
 To better understand naming patterns for family toolchains, see the tables
 below.
-
-
-#### Toolchains to use with StdEnv/2020
-```
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Core-Level; Comp.Can. ; mostly upstream  |                    Intel             |                GCC              |
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
-| Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-9.3.0          |
-| Compiler (a-d Core) + MKL                |                     n/a              |       gcccoremkl-2020a          |
-| Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2020a          |
-| Compiler (a-d Core)          + Cuda 11.0 |                     n/a              |      gcccorecuda-2020a          |
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Compiler only                            |              iccifort-2020.1.217     |              GCC-9.3.0          |
-| Compiler             + MKL               |                 iimkl-2020a          |             gmkl-2020a          |
-| Compiler             + FlexiBLAS         |     iccifortflexiblas-2020a          |     gccflexiblas-2020a          |
-| Compiler + Open MPI                      |                 iompi-2020a          |            gompi-2020a          |
-| Compiler + Open MPI  + MKL               |                 iomkl-2020a          |            gomkl-2020a          |
-| Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2020a          |             gofb-2020a          |
-| Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2020a          |            gofbf-2020a          |
-| Compiler                     + Cuda 11.0 |          iccifortcuda-2020a          |          gcccuda-2020a          |
-| Compiler + Open MPI*         + Cuda 11.0 |                iompic-2020a          |           gompic-2020a          |
-| Compiler             + MKL   + Cuda 11.0 |                iimklc-2020a          |            gmklc-2020a          |
-| Compiler + Open MPI* + MKL   + Cuda 11.0 |                iomklc-2020a          |           gomklc-2020a          |
-| Compiler                     + Cuda 11.4 |          iccifortcuda-2020.1.114     |          gcccuda-2020.1.114     |
-| Compiler + Open MPI*         + Cuda 11.4 |                iompic-2020.1.403.114 |           gompic-2020.1.403.114 |
-| Compiler             + FB    + Cuda 11.4 | iccifortflexiblascuda-2020.1.114     | gccflexiblascuda-2020.1.114     |
-| Compiler + Open MPI* + FB    + Cuda 11.4 |                 iofbc-2020.1.403.114 |            gofbc-2020.1.403.114 |
-| Compiler+OMPI*+FB+ScaLAPACK+FFTW+Cuda11.4|                iofbfc-2020.1.403.114 |           gofbfc-2020.1.403.114 |
-| Compiler                     + Cuda 11.7 |          iccifortcuda-2020.1.117     |          gcccuda-2020.1.117     |
-|------------------------------------------|--------------------------------------|---------------------------------|
-| GCC + Open MPI + OpenBLAS + FFTW         |                     n/a              |             foss-2020a          |
-| GCC + Open MPI + OpenBLAS + FFTW + Cuda  |                     n/a              |         fosscuda-2020a          |
-| Intel Compiler + Intel MPI               |                 iimpi-2020a          |                n/a              |
-| Intel Compiler + Intel MPI       + Cuda  |                iimpic-2020a          |                n/a              |
-| Intel Compiler + Intel MPI + MKL         |                 intel-2020a          |                n/a              |
-| Intel Compiler + Intel MPI + MKL + Cuda  |             intelcuda-2020a          |                n/a              |
-|------------------------------------------|--------------------------------------|---------------------------------|
-  *: Open MPI has been compiled with CUDA
-
-Modules used by MKL based toolchains:
- intel/2020.1.217 imkl/2020.1.217  openmpi/4.0.3 cuda/11.0.2
- gcc/9.3.0        imkl/2020.1.217  openmpi/4.0.3 cuda/11.0.2
-
-Modules used by FlexiBLAS based toolchains:
- intel/2020.1.217 flexiblas/3.0.4  openmpi/4.0.3 cuda/11.4
- gcc/9.3.0        flexiblas/3.0.4  openmpi/4.0.3 cuda/11.4
-```
-
-A spreadsheet of toolchains is available
-[here](https://docs.google.com/spreadsheets/d/11kJfoZRjtsuPG06FgQyiE42513KGxVLqcu33-WGmMkA/edit#gid=0)
-(CC staff link) and shown below.
-
-![Toolchain list](images/toolchains-2020a.png)
-
-
-#### Newer alternative 2022a toolchains that can be used with StdEnv/2020
-
-These toolchains are optional and should only be used if a newer compiler or MPI implementation is necessary or
-desirable. Note that CUDA now sits on top of MPI, as the base MPI understands CUDA.
-```
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Core-Level; Comp.Can. ; mostly upstream  |                    Intel             |                GCC              |
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
-| Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-11.3.0         |
-| Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2022a          |
-| Compiler (a-d Core)          + Cuda 11.7 |                     n/a              |      gcccorecuda-2022a          |
-|------------------------------------------|--------------------------------------|---------------------------------|
-| Compiler only                            |       intel-compilers-2022.1.0       |              GCC-11.3.0         |
-| Compiler             + FlexiBLAS         |                   ifb-2022a          |     gccflexiblas-2022a          |
-| Compiler             + FlexiBLAS + FFTW  |                  ifbf-2022a          |             gfbf-2022a          |
-| Compiler + Open MPI                      |                 iompi-2022a          |            gompi-2022a          |
-| Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2022a          |             gofb-2022a          |
-| Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2022a          |             foss-2022a          |
-| Compiler                     + Cuda 11.7 |    intelcompilerscuda-2022a          |          gcccuda-2022a          |
-| Compiler + Open MPI          + Cuda 11.7 |                iompic-2022a          |           gompic-2022a          |
-| Compiler            + FB     + Cuda 11.7 |                  ifbc-2022a          | gccflexiblascuda-2022a          |
-| Compiler + Open MPI + FB     + Cuda 11.7 |                 iofbc-2022a          |            gofbc-2022a          |
-| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2022a          |         fosscuda-2022a          |
-|------------------------------------------|--------------------------------------|---------------------------------|
-
-Modules used by toolchains:
- intel/2022.1.0   flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
- gcc/11.3.0       flexiblas/3.2.0  openmpi/4.1.4 cuda/11.7
-```
 
 #### Toolchains to use with StdEnv/2023
 
@@ -295,11 +200,21 @@ Modules used by toolchains:
 Modules used by toolchains:
  intel/2023.2.1   flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
  gcc/12.3         flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
+
+There are also `2024a` versions, which should only be used if there is a clear benefit. They use the modules
+ intel/2024.2.0   flexiblas/3.4.4  openmpi/5.0.3 cuda/12.6
+ gcc/13.3         flexiblas/3.4.4  openmpi/5.0.3 cuda/12.6
 ```
 
 ## Installing a package in EasyBuild
 
 See also: [Installing restricted software](#installing-restricted-software)
+
+On the build infrastructure we strongly recommend starting an interactive job first, via `salloc`, e.g.
+```
+salloc -c 8 --mem=24G --time=8:00:00
+```
+This way your build will not slow down, nor be slowed down by, other users on the login node.
 
 If a package already has an existing recipe, you can install it for testing (in `$HOME/.local/easybuild`, which after testing can be safely deleted) using the following command:
 
@@ -315,7 +230,7 @@ sudo -iu ebuser eb-pull-cc
 sudo -i -u ebuser eb <name of easyconfig file>
 ```
 
-This will, by default, create an AVX2 (Haswell processor and up) optimized
+This will, by default, create an AVX2/x86-64-v3 (Haswell processor and up) optimized
 executable for all software that is not installed at the “Core” level.
 
 ### Installing for a different toolchain
@@ -324,7 +239,7 @@ If the recipe you want to use already exists but uses the a different toolchain,
 you can sometimes install it using a single command:
 
 ```
-sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iofb,2020a
+sudo -i -u ebuser eb HPL-2.3-foss-2023a.eb --try-toolchain=gofb,2023a
 ```
 
 **Note:** The actual generated easyconfig will be saved into
@@ -332,18 +247,13 @@ sudo -i -u ebuser eb HPL-2.3-intel-2020a.eb --try-toolchain=iofb,2020a
 
 ### Installing for a different architecture
 
-Once a recipe has been installed for the architecture `avx2`, older/other
+Once a recipe has been installed for the architecture `avx2`, other
 architectures can be compiled.
 
-Sandy Bridge processors and up:
+Skylake/Zen4 processors and up (x86-64-v4):
 
 ```
-sudo -i -u ebuser RSNT_ARCH=avx eb <name of easyconfig file>
-```
-Anything else:
-
-```
-sudo -i -u ebuser RSNT_ARCH=sse3 eb <name of easyconfig file>
+sudo -i -u ebuser RSNT_ARCH=avx512 eb <name of easyconfig file>
 ```
 
 **Note:** The actual generated easyconfig will be saved into
@@ -354,24 +264,18 @@ Quite often, we want to compile a recipe for multiple architectures, and possibl
 using `parallel`. For example, to build `HDF5-1.10.6` with both GCC and Intel-based OpenMPI, for both architectures `avx2` and `avx512`, you can execute : 
 
 ```
-parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolchain={2} --disable-map-toolchains ::: avx2 avx512 ::: gompi,2020a iompi,2020a
+parallel sudo -iu ebuser RSNT_ARCH={1} eb HDF5-1.10.6-gompi-2020a.eb --try-toolchain={2} --disable-map-toolchains ::: avx2 avx512 ::: gompi,2023a iompi,2023a
 ``` 
 
 
 ### Installing for a different StdEnv
 
-The `StdEnv/2020` is built on top of Gentoo.
+The `StdEnv/2023` is built on top of Gentoo.
 In order for EasyBuild to choose the correct toolchains and underlying Gentoo, a suitable StdEnv needs
-to be loaded before invoking `eb`. 
-As of March 15th, 2020, on build-nodes, `StdEnv/2020` is the default environment.
+to be loaded before invoking `eb`. `StdEnv/2023` is the default environment.
 
-For `StdEnv/2023` please run
 
-```
-module load StdEnv/2023
-```
-
-### Creating or changing a recipe (2020)
+### Creating or changing a recipe
 
 Because often a few things need changing in the easyconfig file we are going to
 check out a git repository and work with that.
@@ -379,169 +283,6 @@ check out a git repository and work with that.
 ```
 cd easybuild-easyconfigs
 git pull
-git checkout computecanada-main
-```
-
-Then you `cd` to the package, e.g.:
-
-```
-cd easybuild/easyconfigs/i/igraph
-```
-
-And create a new easyconfig to make modifications in:
-
-```
-cp igraph-0.8.2-foss-2020a.eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
-```
-
-The change from `foss-2020a` to `gcccoreflexiblas-2020a` is a toolchain change. We do
-not expose the toolchains to users but use them internally to denote compiler,
-MPI and linear algebra combinations.
-
-File `igraph-0.8.2-gcccoreflexiblas-2020a.eb` is then edited as follows:
-
-```
-easyblock = 'ConfigureMake'
-
-name = 'igraph'
-version = '0.8.2'
-
-homepage = 'https://igraph.org'
-description = """igraph is a collection of network analysis tools with the emphasis on
-efficiency, portability and ease of use. igraph is open source and free. igraph can be
-programmed in R, Python and C/C++."""
-
-toolchain = {'name': 'gcccoreflexiblas', 'version': '2020a'}
-toolchainopts = {'pic': True}
-
-source_urls = ['https://github.com/igraph/igraph/releases/download/%(version)s']
-sources = ['%(name)s-%(version)s.tar.gz']
-checksums = ['718a471e7b8cbf02e3e8006153b7be6a22f85bb804283763a0016280e8a60e95']
-
-builddependencies = [
-    ('Autotools', '20180311'),
-    ('pkg-config', '0.29.2'),
-]
-
-dependencies = [
-    ('GLPK', '4.65'),
-    ('libxml2', '2.9.10'),
-    ('zlib', '1.2.11'),
-]
-
-preconfigopts = "autoreconf -i && "
-# Remove hardcoded links to BLAS/LAPACK
-preconfigopts += "sed -i 's/-lblas/$LIBBLAS/' configure && "
-preconfigopts += "sed -i 's/-llapack/$LIBLAPACK/' configure && "
-
-configopts = "--with-external-blas --with-external-lapack --with-external-glpk"
-
-multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
-multi_deps_extensions_only = True
-
-exts_defaultclass = 'PythonPackage'
-exts_list = [
-    ('python-igraph', version, {
-        'modulename': 'igraph',
-        'source_tmpl': '%(name)s-%(version)s.tar.gz',
-        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
-        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
-    }),
-]
-modextrapaths = {
-# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
-    'EBPYTHONPREFIXES': [''],
-}
-
-sanity_check_paths = {
-    'files': ['lib/libigraph.%s' % x for x in [SHLIB_EXT, 'la', 'a']] + ['lib/pkgconfig/igraph.pc'] +
-             ['include/igraph/igraph%s.h' % x for x in ['', '_blas', '_constants', '_lapack', '_types', '_version']],
-    'dirs': [],
-}
-```
-
-Two changes were made from the original which can be found
-[here](https://github.com/ComputeCanada/easybuild-easyconfigs/blob/computecanada-main/easybuild/easyconfigs/i/igraph/igraph-0.8.2-foss-2020a.eb):
-
-- Changing the toolchain to `gcccoreflexiblas,2020a`. It is quite frequent that the upstream versions
-of EasyBuild recipes use an over-complete toolchain, i.e. a toolchain which includes dependencies that
-are not needed. In this example, the upstream recipe uses "foss" which includes OpenMPI, but igraph does
-not use OpenMPI. We "downgrade" the toolchain to gcccoreflexiblas, which uses GCC and FlexiBLAS.
-- Adding the section for Python extensions: 
-```
-multi_deps = {'Python': ['3.6', '3.7', '3.8'] }
-multi_deps_extensions_only = True
-
-exts_defaultclass = 'PythonPackage'
-exts_list = [
-    ('python-igraph', version, {
-        'modulename': 'igraph',
-        'source_tmpl': '%(name)s-%(version)s.tar.gz',
-        'source_urls': ['https://pypi.python.org/packages/source/p/python-igraph/'],
-        'checksums': ['4601638d7d22eae7608cdf793efac75e6c039770ec4bd2cecf76378c84ce7d72'],
-    }),
-]
-modextrapaths = {
-# EBPYTHONPREFIXES directories for current python version X.Y to PYTHONPATH.
-    'EBPYTHONPREFIXES': [''],
-}
-``` 
-When it makes sense, we try to install the python bindings alongside the main
-code. In this case, we install the `python-igraph` package. Whenever possible, we
-also try to install it for multiple versions of python. This is done with the 
-`multi_deps` option. Finally, the `EBPYTHONPREFIXES` environment variable is used by
-our python configuration to find packages compatible with the version of python that
-is being used.
-
-
-```
-eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
-module load igraph/0.8.2
-```
-
-Please refer to the [Checksums in EasyConfig
-recipes](#checksums-in-easyconfig-recipes) section to learn how to add a
-checksum to your new recipe.
-
-This uses the file that you just changed in the current directory. Once you are
-satisfied with the local build, you can then add the file to the git repository:
-
-```
-git add igraph-0.8.2-gcccoreflexiblas-2020a.eb
-git pull origin computecanada-main
-git commit -m "commit message goes here"
-git push origin computecanada-main
-```
-
-The final step to install it on the build node, is to pull it and install it as
-the user `ebuser`; the first command syncs the channel from GitHub:
-
-```
-sudo -iu ebuser eb-pull-cc
-sudo -iu ebuser eb igraph-0.8.2-gcccoreflexiblas-2020a.eb
-```
-
-Note that if you installed the package in your own account, that version will
-have priority over the globally installed version. Remove the folder
-`$HOME/.local/easybuild` if you want to get rid of the version installed in your
-home.
-
-Once this is done, you must [deploy on CVMFS](cvmfs.md). Unless the software is
-deployed, it will not be visible on the clusters.
-
-In general it is best to work by example. There are thousands of easyconfig
-files in the `easybuild-easyconfigs` GitHub repository.
-
-### Creating or changing a recipe (2023)
-
-Because often a few things need changing in the easyconfig file we are going to
-check out a git repository and work with that.
-
-```
-module load StdEnv/2023
-cd easybuild-easyconfigs-2023
-git pull
-git checkout 2023
 ```
 
 Then you make the directory of (if needed) and `cd` to the package, e.g.:
@@ -555,12 +296,12 @@ And create a new easyconfig to make modifications, by copying from the upstream 
 ```
 cp $EBROOTGENTOO/easybuild/easyconfigs/i/igraph/igraph-0.10.6-foss-2022b.eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
 ```
-if the recipe were in the 2020 easyconfig repository, please copy from there, e.g.
+if the recipe were in the 2020 easyconfig repository, please copy it, e.g.
 ```
-cp ~/easybuild-easyconfigs/easybuild/easyconfigs/i/igraph/igraph-0.10.6-foss-2022b.eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
+cp igraph-0.10.6-foss-2022b.eb igraph-0.10.6-gcccoreflexiblas-2023a.eb
 ```
 
-The change from `foss-2020a` to `gcccoreflexiblas-2023a` is a toolchain change. We do
+The change from `foss-2022b` to `gcccoreflexiblas-2023a` is a toolchain change. We do
 not expose the toolchains to users but use them internally to denote compiler,
 MPI and linear algebra combinations.
 
