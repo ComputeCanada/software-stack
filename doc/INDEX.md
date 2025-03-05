@@ -22,10 +22,10 @@ process software installation tickets, etc.
 
 ## Introduction
 
-The software available to Compute Canada users, including scientific and
+The software available to Alliance users, including scientific and
 research software, is maintained in a single central software stack accessible
-from all Compute Canada clusters. This presents users with a consistent
-experience across all current and future Compute Canada sites.
+from all Alliance clusters. This presents users with a consistent
+experience across all current and future Alliance sites.
 
 A variety of tools are used to achieve this. [Gentoo](https://www.gentoo.org/) 
 provide an underlying layer containing the
