@@ -227,11 +227,13 @@ For a global installation (**you must do this step before you can deploy to CVMF
 ```
 ## Pull to the ebuser's account first
 sudo -iu ebuser eb-pull-cc
-sudo -i -u ebuser eb <name of easyconfig file>
+sudo -i -u ebuser eb <name of easyconfig file> --job
 ```
 
 This will, by default, create an AVX2/x86-64-v3 (Haswell processor and up) optimized
-executable for all software that is not installed at the “Core” level.
+executable for all software that is not installed at the “Core” level. The `--job` submits
+the compilation to a compute node, which has the added benefit that your compilation will
+finish even if you logout from Archimedes.
 
 ### Installing for a different toolchain
 
@@ -239,7 +241,7 @@ If the recipe you want to use already exists but uses the a different toolchain,
 you can sometimes install it using a single command:
 
 ```
-sudo -i -u ebuser eb HPL-2.3-foss-2023a.eb --try-toolchain=gofb,2023a
+sudo -i -u ebuser eb HPL-2.3-foss-2023a.eb --try-toolchain=gofb,2023a --job
 ```
 
 **Note:** The actual generated easyconfig will be saved into
@@ -253,7 +255,7 @@ architectures can be compiled.
 Skylake/Zen4 processors and up (x86-64-v4):
 
 ```
-sudo -i -u ebuser RSNT_ARCH=avx512 eb <name of easyconfig file>
+sudo -i -u ebuser RSNT_ARCH=avx512 eb <name of easyconfig file> --job
 ```
 
 **Note:** The actual generated easyconfig will be saved into
