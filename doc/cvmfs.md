@@ -159,11 +159,11 @@ transactions. One to `dev` or `prod` repository for the module, and one to the
 sudo su - libuser
 
 sudo /etc/rsnt/start_transaction <dev|prod>
-sudo /etc/rsnt/start_transaction data
+sudo /etc/rsnt/start_transaction public.data
 
 /etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
 
-sudo /etc/rsnt/publish_transaction data
+sudo /etc/rsnt/publish_transaction public.data
 sudo /etc/rsnt/publish_transaction <dev|prod>
 
 exit
