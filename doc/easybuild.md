@@ -25,7 +25,7 @@ infrastructure. For detailed EasyBuild documentation, see:
       - [Core toolchains](#core-toolchains)
       - [Compiler-only toolchains](#compiler-only-toolchains)
       - [Family toolchains](#family-toolchains)
-      - [Toolchains to use with StdEnv/2020](#toolchains-to-use-with-stdenv-2020)
+      - [Toolchains to use with StdEnv/2023](#toolchains-to-use-with-stdenv-2023)
   * [Installing a package in EasyBuild](#installing-a-package-in-easybuild)
     + [Installing for a different toolchain](#installing-for-a-different-toolchain)
     + [Installing for a different architecture](#installing-for-a-different-architecture)
