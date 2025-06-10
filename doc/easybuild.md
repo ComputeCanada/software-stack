@@ -181,7 +181,7 @@ below.
 | Compiler (arch-independent Core)         |                     n/a              |           SYSTEM                |
 | Compiler (arch-dependent Core)           |                     n/a              |          GCCcore-12.3.0         |
 | Compiler (a-d Core) + FlexiBLAS          |                     n/a              | gcccoreflexiblas-2023a          |
-| Compiler (a-d Core)          + Cuda 12.2 |                     n/a              |      gcccorecuda-2023a          |
+| Compiler (a-d Core)          + Cuda 12.6 |                     n/a              |      gcccorecuda-2023.2.126     |
 |------------------------------------------|--------------------------------------|---------------------------------|
 | Compiler only                            |       intel-compilers-2023.2.1       |              GCC-12.3.0         |
 | Compiler             + FlexiBLAS         |                   ifb-2023a          |     gccflexiblas-2023a          |
@@ -189,17 +189,18 @@ below.
 | Compiler + Open MPI                      |                 iompi-2023a          |            gompi-2023a          |
 | Compiler + Open MPI  + FlexiBLAS (FB)    |                  iofb-2023a          |             gofb-2023a          |
 | Compiler + Open MPI  + FB+ScaLAPACK+FFTW |                 iofbf-2023a          |             foss-2023a          |
-| Compiler                     + Cuda 12.2 |    intelcompilerscuda-2023a          |          gcccuda-2023a          |
-| Compiler + Open MPI          + Cuda 12.2 |                iompic-2023a          |           gompic-2023a          |
-| Compiler            + FB     + Cuda 12.2 |                  ifbc-2023a          | gccflexiblascuda-2023a          |
-| Compiler            + FB+FFTW+ Cuda 12.2 |                 ifbfc-2023a          |            gfbfc-2023a          |
-| Compiler + Open MPI + FB     + Cuda 12.2 |                 iofbc-2023a          |            gofbc-2023a          |
-| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2023a          |         fosscuda-2023a          |
+| Compiler                     + Cuda 12.6 |    intelcompilerscuda-2023.2.126     |          gcccuda-2023.2.126     |
+| Compiler + Open MPI          + Cuda 12.6 |                iompic-2023.2.415.126 |           gompic-2023.2.415.126 |
+| Compiler            + FB     + Cuda 12.6 |                  ifbc-2023.2.126     | gccflexiblascuda-2023.2.126     |
+| Compiler            + FB+FFTW+ Cuda 12.6 |                 ifbfc-2023.2.126     |            gfbfc-2023.2.126     |
+| Compiler + Open MPI + FB     + Cuda 12.6 |                 iofbc-2023.2.415.126 |            gofbc-2023.2.415.126 |
+| Compiler + OpenMPI+FB+ScaLAPACK+FFTW+Cuda|                iofbfc-2023.2.415.126 |         fosscuda-2023.2.415.126 |
 |------------------------------------------|--------------------------------------|---------------------------------|
 
 Modules used by toolchains:
- intel/2023.2.1   flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
- gcc/12.3         flexiblas/3.3.1  openmpi/4.1.5 cuda/12.2
+ intel/2023.2.1   flexiblas/3.3.1  openmpi/4.1.5 cuda/12.6
+ gcc/12.3         flexiblas/3.3.1  openmpi/4.1.5 cuda/12.6
+CUDA 12.2 based toolchains use the 2023a versions of gcccuda etc. but should no longer be used for new installations.
 
 There are also `2024a` versions, which should only be used if there is a clear benefit. They use the modules
  intel/2024.2.0   flexiblas/3.4.4  openmpi/5.0.3 cuda/12.6
