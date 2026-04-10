@@ -86,19 +86,16 @@ diff ANSYS-18.1.eb ANSYS-18.2.eb
 
 ## Testing the local installation
 
-Proceed with a test installation in your home directory (`./local/easybuild`) on
-the build-nodes:
+Proceed with a test installation in a temporary directory (`/tmp/$USER`) on a worker node on
+Archimedes with X11 forwarding enabled:
 
 ```
 screen -S ansys181
-eb ANSYS-18.1.eb --sourcepath=/cvmfs/restricted.computecanada.ca/easybuild/sources
+salloc -n 8 --nodes=1 --time=24:00:00 --mem=15G --x11
+eb ANSYS-18.1.eb --sourcepath=/cvmfs/restricted.computecanada.ca/easybuild/sources --prefix /tmp/$USER
 # To detach from screen: Ctrl+A, D
-```
 
-Once installed, reconnect to the build-nodes with X11 forwarding. Then:
-
-```
-module use $HOME/.local/easybuild/modules/2017/Core
+module use /tmp/$USER/modules/2023/x86-64-v3/Core
 module load ansys/18.1
 
 # You may have to put the build-nodes's IP address in the license server firewall
@@ -111,15 +108,16 @@ fluent &
 If the test succeeds, publish the Easybuild file and do some cleanup:
 
 ```
+# on login node
 cd $HOME/easybuild-easyconfigs/easybuild/easyconfigs/a/ANSYS
 git add ANSYS-18.1.eb
 git pull origin computecanada-main
 git commit -m "New ANSYS version 18.1"
 git push origin computecanada-main
 
-cd
-chmod -R u+w .local/easybuild
-rm -rf .local/easybuild
+# on worker node
+chmod -R u+w /tmp/$USER
+rm -rf /tmp/$USER
 ```
 
 ## Main installation and publication on dev
@@ -130,18 +128,19 @@ Installation on the restricted space:
 screen -d -r ansys181
 
 sudo -iu ebuser eb-pull-cc
-sudo -i -g rsnt_soft -u ebuser eb ANSYS-18.1.eb
+sudo -i -g rsnt_soft -u ebuser eb ANSYS-18.1.eb --bwrap
 ```
 
 Publication on the dev repository:
 
 ```
+ssh publisher1
 sudo su - libuser
 
 sudo /etc/rsnt/start_transaction dev
 sudo /etc/rsnt/start_transaction restricted
-/etc/rsnt/rsnt-sync --what easybuild --software ansys --version 18.1
-ls /stratum0/cvmfs/restricted.computecanada.ca/easybuild/software/2017/Core/ansys/18.1
+/etc/rsnt/rsnt-sync --what easybuild --software ansys --version 18.1 --tarball /shared_tmp/ansys-18.1-Core-x86-64-v3-2023-ebuser.tar
+ls /cvmfs/restricted.computecanada.ca/easybuild/software/2023/x86-64-v3/Core/ansys/18.1
 sudo /etc/rsnt/publish_transaction restricted
 sudo /etc/rsnt/publish_transaction dev && exit
 ```
@@ -179,7 +178,7 @@ sudo su - libuser
 
 sudo /etc/rsnt/start_transaction prod
 sudo /etc/rsnt/start_transaction restricted
-/etc/rsnt/rsnt-sync --what easybuild --software ansys --version 18.1
+/etc/rsnt/rsnt-sync --what easybuild --software ansys --version 18.1 --tarball /shared_tmp/ansys-18.1-Core-x86-64-v3-2023-ebuser.tar
 sudo /etc/rsnt/publish_transaction restricted
 sudo /etc/rsnt/publish_transaction prod && exit
 
