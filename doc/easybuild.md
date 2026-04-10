@@ -789,12 +789,15 @@ We specify the type of restriction in the `validate_license` function, in the
 value which corresponds to the restriction imposed on that software.
 
 In the above case 1 (access controlled by a license server with no other
-restriction), the only thing to be careful about is to install the software in
-the restricted repository. This is achieved by using the group `rsnt_soft` to
-install, with:
+restriction), there are two things to be careful about. Firstly to install the
+software in the restricted repository, use the group `rsnt_soft`.
+And secondly, use the `--bwrap` option so that the software is
+installed using [bubblewrap](https://github.com/containers/bubblewrap),
+in a node-local directory for performance reasons and then
+packaged in a tarball under `/shared_tmp`.
 
 ```
-  sudo -i -g rsnt_soft -u ebuser eb <recipe>
+  sudo -i -g rsnt_soft -u ebuser eb <recipe> --bwrap
 ```
 
 In addition, one can add code similar to what is shown below to the module. This
@@ -848,7 +851,7 @@ Instead, it should be installed under
 said software to end up in the central module tree. To do so, use this command:
 
 ```
-sudo -i -g <group for the software> -u ebuser eb <recipe>
+sudo -i -g <group for the software> -u ebuser eb <recipe> --bwrap
 ```
 
 If it is restricted, but not by POSIX group, you can use `rsnt_soft` as the
