@@ -133,7 +133,8 @@ exit
 Software installed in the restricted repository have binaries in the restricted
 repository, and modules in the public repository. Because of that,  you must start two
 transactions. One to `dev` or `prod` repository for the module, and one to the
-`restricted` repository. Here is an example:
+`restricted` repository. Moreover, restricted software is installed via `eb --bwrap`
+which produces a tarball in `/shared_tmp`. Here is an example:
 
 ```
 sudo su - libuser
@@ -141,7 +142,7 @@ sudo su - libuser
 sudo /etc/rsnt/start_transaction <dev|prod>
 sudo /etc/rsnt/start_transaction restricted
 
-/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version>
+/etc/rsnt/rsnt-sync --what easybuild --software <software name> --version <software version> --tarball /shared_tmp/<name of tarball>
 
 sudo /etc/rsnt/publish_transaction restricted
 sudo /etc/rsnt/publish_transaction <dev|prod>
