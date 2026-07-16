@@ -49,17 +49,17 @@ If a package already has an existing recipe, you can install it easily using the
 following command:
 
 ```
-sudo -i -u gentoouser emerge <package name> [--pretend]
+sudo -i -u gentoouser bwrap --dev-bind / / --bind /cvmfs_ceph/soft.computecanada.ca/gentoo /cvmfs/soft.computecanada.ca/gentoo emerge <package name> [--pretend]
 ```
 
 This will sometimes ask you to make modifications to configuration files, but
 generate temporary files first. You then make the modifications using
 
 ```
-sudo -u gentoouser -i etc-update
+sudo -i -u gentoouser bwrap --dev-bind / / --bind /cvmfs_ceph/soft.computecanada.ca/gentoo /cvmfs/soft.computecanada.ca/gentoo etc-update
 ```
 
-You can use `--pretend` without `sudo` as well, as it will only do a dry run.
+You can use `emerge --pretend` without `sudo` and `bwrap` as well, as it will only do a dry run.
 This will install the stable version: if the stable version is too old for some
 reason you need to unmask the "testing" version by adding it to
 `$EPREFIX/etc/portage/package.accept_keywords`, e.g. `app-misc/tmux ~amd64`
@@ -67,7 +67,7 @@ unmasked `tmux-3.1b`.
 
 The ebuilds themselves can be found under `$EPREFIX/var/db/repos/gentoo/`
 (upstream, frozen) and `$EPREFIX/var/db/repos/computecanada` (ours, updated via
-`sudo -iu gentoouser emerge --sync` from the [CC
+`sudo -iu gentoouser emerge --sync` from the relevant (year, e.g. 2023) branch of [CC
 overlay](https://github.com/ComputeCanada/gentoo-overlay).
 
 ### Creating a new recipe
@@ -79,7 +79,7 @@ available in EasyBuild.
 
 To add a new package to Gentoo you will first need to create the package. As an
 example, we created this one for `opa-psm2` (OmniPath libraries):
-https://github.com/ComputeCanada/gentoo-overlay/blob/main/sys-fabric/opa-psm2/opa-psm2-11.2.86.ebuild.
+https://github.com/ComputeCanada/gentoo-overlay/blob/2020/sys-fabric/opa-psm2/opa-psm2-11.2.86.ebuild.
 This file is as follows:
 
 ```
@@ -122,7 +122,7 @@ git pull
 The `opa-psm2` package can then be test-built using this syntax:
 
 ```
-repoman manifest # in the same directory as the ebuild
+PORTAGE_USERNAME=$USER PORTAGE_GRPNAME=$USER PORTAGE_TMPDIR=$HOME/.local/gentoo ebuild opa-psm2-11.2.86.ebuild manifest # in the same directory as the ebuild
 mkdir -p ~/.local/gentoo
 rm -rf ~/.local/gentoo/*
 PORTAGE_USERNAME=$USER PORTAGE_GRPNAME=$USER PORTAGE_TMPDIR=$HOME/.local/gentoo ebuild opa-psm2-11.2.86.ebuild install
@@ -145,13 +145,15 @@ git commit
 git push
 ```
 
-The final step is to move this into “build-nodes” production; the first command
+The final step is to install globally; the first command
 syncs the channel from github:
 
 ```
-sudo -u gentoouser -i emerge --sync
-sudo -u gentoouser -i emerge sys-fabric/opa-psm2
+sudo -u gentoouser -i bwrap --dev-bind / / --bind /cvmfs_ceph/soft.computecanada.ca/gentoo /cvmfs/soft.computecanada.ca/gentoo emerge --sync
+sudo -u gentoouser -i bwrap --dev-bind / / --bind /cvmfs_ceph/soft.computecanada.ca/gentoo /cvmfs/soft.computecanada.ca/gentoo emerge sys-fabric/opa-psm2
 ```
+
+You will then need to sync to cvmfs, and only when it is pushed to `dev` it will be generally visible on Archimedes.
 
 In general it is best to work by example. There are thousands of ebuilds under
 `$EPREFIX/var/db/repos`.
