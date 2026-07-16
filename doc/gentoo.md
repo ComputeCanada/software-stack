@@ -122,9 +122,9 @@ git pull
 The `opa-psm2` package can then be test-built using this syntax:
 
 ```
-PORTAGE_USERNAME=$USER PORTAGE_GRPNAME=$USER PORTAGE_TMPDIR=$HOME/.local/gentoo ebuild opa-psm2-11.2.86.ebuild manifest # in the same directory as the ebuild
 mkdir -p ~/.local/gentoo
 rm -rf ~/.local/gentoo/*
+PORTAGE_USERNAME=$USER PORTAGE_GRPNAME=$USER PORTAGE_TMPDIR=$HOME/.local/gentoo ebuild opa-psm2-11.2.86.ebuild manifest # in the same directory as the ebuild
 PORTAGE_USERNAME=$USER PORTAGE_GRPNAME=$USER PORTAGE_TMPDIR=$HOME/.local/gentoo ebuild opa-psm2-11.2.86.ebuild install
 ```
 
