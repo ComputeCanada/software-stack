@@ -5,7 +5,7 @@
 **Note:** Gentoo is more of an advanced topic. Most of the times, you will
 [install software with EasyBuild](easybuild.md).
 
-**Note:** You must always first `module load StdEnv/2020` before using Gentoo
+**Note:** You must always first `module load StdEnv/2023` before using Gentoo
 commands.
 
 The following contain basic commands that you may need for using Gentoo Prefix
